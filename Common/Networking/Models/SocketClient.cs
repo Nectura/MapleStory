@@ -14,17 +14,17 @@ public abstract class SocketClient
     public byte[] ReceiveIv { get; }
     public byte[] SendIv { get; }
 
-    private readonly Socket _socket;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly AutoResetEvent _autoResetEvent = new(false);
+    private readonly Socket _socket;
 
     protected SocketClient(Socket socket)
     {
         _socket = socket;
 
         RemoteIpAddress = socket.GetRemoteIpAddress();
-        ReceiveIv = new byte[] { 255, 255, 255, 255 };
-        SendIv = new byte[] { 255, 255, 255, 255 };
+        ReceiveIv = ByteExtensions.GenerateRandomByteArray(4);
+        SendIv = ByteExtensions.GenerateRandomByteArray(4);
 
         StartReceivingPackets();
     }

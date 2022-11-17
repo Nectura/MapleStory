@@ -8,7 +8,7 @@ namespace Common.Networking;
 
 public class TcpServer
 {
-    public ConcurrentDictionary<IPAddress, TcpGameClient> ConnectedPeers = new();
+    public readonly HashSet<SocketClient> ConnectedPeers = new();
 
     private readonly TcpListener _listener;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
@@ -17,14 +17,12 @@ public class TcpServer
     public TcpServer(int port)
     {
         _listener = new TcpListener(IPAddress.Any, port);
-    }
-
-    public virtual void StartListeningForConnections()
-    {
-        Console.WriteLine("Started Listening For Connections.");
         _listener.Start();
+        Console.WriteLine("Started Listening For Connections.");
+        BeginAcceptingSockets();
     }
 
+    // probably redundant to disconnect clients, they get dc'd anyways
     public virtual async ValueTask ShutdownAsync(CancellationToken cancellationToken = default)
     {
         Console.WriteLine("Shutting down.");
@@ -32,7 +30,7 @@ public class TcpServer
 
         _cancellationTokenSource.Cancel();
 
-        var peerDisconnectionTasks = ConnectedPeers.Values.Select(DisconnectPeerAsync);
+        var peerDisconnectionTasks = ConnectedPeers.Select(DisconnectPeerAsync);
 
         await Task.WhenAll(peerDisconnectionTasks);
 
@@ -44,17 +42,9 @@ public class TcpServer
         }
     }
 
-    public void StartAcceptingConnections()
+    private void BeginAcceptingSockets()
     {
-        Console.WriteLine("Started Accepting Connections.");
-        Task.Run(() =>
-        {
-            while (!_cancellationTokenSource.IsCancellationRequested)
-            {
-                _listener.BeginAcceptSocket(OnSocketAccepted, default);
-                _autoResetEvent.WaitOne();
-            }
-        });
+        _listener.BeginAcceptSocket(OnSocketAccepted, default);
     }
 
     private async void OnSocketAccepted(IAsyncResult state)
@@ -62,27 +52,32 @@ public class TcpServer
         var clientSocket = _listener.EndAcceptSocket(state);
         var tcpGameClient = new TcpGameClient(clientSocket);
 
-        // if (ConnectedPeers.ContainsKey(tcpGameClient.RemoteIpAddress))
-        //     throw new InvalidOperationException();
-
-        if (ConnectedPeers.ContainsKey(tcpGameClient.RemoteIpAddress))
-            ConnectedPeers.TryRemove(tcpGameClient.RemoteIpAddress, out _);
+        BeginAcceptingSockets();
 
         tcpGameClient.OnDisconnection += ClientDisconnected;
         tcpGameClient.OnPayloadSent += PayloadSent;
         tcpGameClient.OnPayloadReceived += PayloadReceived;
 
-        ConnectedPeers.TryAdd(tcpGameClient.RemoteIpAddress, tcpGameClient);
+        ConnectedPeers.Add(tcpGameClient);
 
         Console.WriteLine($"Received connection from: {tcpGameClient.RemoteIpAddress}");
 
         await SendHandshakePacket(tcpGameClient);
-
-        _autoResetEvent.Set();
     }
 
     private void PayloadReceived(SocketClient socketClient, byte[] payload)
     {
+        /*
+         * short - packet length
+         * short - packet header
+         * 
+         */
+        using var reader = new ByteBuffer(payload);
+        var packetLength = reader.ReadShort();
+
+        if (packetLength == 0)
+            return;
+
         Console.WriteLine($"Received a payload from client #{socketClient.RemoteIpAddress} : {BitConverter.ToString(payload)}");
     }
 
@@ -93,7 +88,7 @@ public class TcpServer
 
     private void ClientDisconnected(SocketClient socketClient)
     {
-        ConnectedPeers.TryRemove(socketClient.RemoteIpAddress, out _);
+        ConnectedPeers.Remove(socketClient);
 
         Console.WriteLine($"Client disconnection: {socketClient.RemoteIpAddress}");
     }

@@ -8,4 +8,12 @@ public static class ByteExtensions
         Buffer.BlockCopy(array, 0, ba, 0, capacity);
         return ba;
     }
+
+    public static byte[] GenerateRandomByteArray(int length)
+    {
+        var byteArray = new byte[length];
+        var rand = new Random();
+        rand.NextBytes(byteArray);
+        return byteArray;
+    }
 }

@@ -4,7 +4,7 @@ using Common.Networking.OperationCodes;
 
 namespace Common.Networking;
 
-internal class GameServer
+public sealed class GameServer
 {
     public readonly HashSet<GameClient> ConnectedPeers = new();
     private readonly TcpListener _listener;

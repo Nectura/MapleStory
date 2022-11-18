@@ -1,9 +1,9 @@
+using System.Net;
 using Common.Database;
 using Common.Networking;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
 
 var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
 
@@ -13,8 +13,8 @@ builder.Services.AddDbContext<EntityContext>(options =>
         .EnableSensitiveDataLogging()
         .EnableDetailedErrors());
 
-var _ = new TcpServer(8484);
+var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+var _ = new GameServer(new IPEndPoint(IPAddress.Any, 8484));
 
 app.Run();

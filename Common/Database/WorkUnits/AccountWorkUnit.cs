@@ -1,9 +1,4 @@
-﻿using Common.Database.Models;
-using Common.Database.Repositories;
-using Common.Database.Repositories.Interfaces;
-using Common.Database.WorkUnits.Abstract;
-
-namespace Common.Database.WorkUnits;
+﻿namespace Common.Database.WorkUnits;
 
 /* public class AccountWorkUnit : UnitOfWork
 {

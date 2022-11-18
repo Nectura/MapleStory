@@ -1,5 +1,4 @@
 ﻿using Common.Database.Models.Interfaces;
-using Common.Database.Repositories.Abstract;
 using Common.Database.Repositories.Abstract.Interfaces;
 
 namespace Common.Database.Repositories.Interfaces;

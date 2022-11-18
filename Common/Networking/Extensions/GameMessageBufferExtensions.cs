@@ -1,25 +1,9 @@
 ﻿using System.Reflection;
-using Common.Networking;
+using Common.Networking.Packets.Attributes;
 
-namespace LoginServer.Handlers;
+namespace Common.Networking.Extensions;
 
-[PacketHandler(1)]
-public record struct ClientLoginPacket
-{
-    [PacketOrder(0)]
-    public string UserName { get; init; }
-    
-    [PacketOrder(1)]
-    public string Password { get; init; }
-}
-
-public interface PacketHandler
-{
-    // something here
-
-}
-
-public static class Test
+public static class GameMessageBufferExtensions
 {
     private struct PacketProperty
     {
@@ -52,34 +36,3 @@ public static class Test
         }
     } 
 }
-
-public class PacketHandlerAttribute : Attribute
-{
-    public ushort OperationCode { get; set; }
-
-    public PacketHandlerAttribute(ushort opcode)
-    {
-        OperationCode = opcode;
-    }
-}
-public class PacketOrderAttribute : Attribute
-{
-    public uint Order { get; set; }
-
-    public PacketOrderAttribute(uint orderNum)
-    {
-        Order = orderNum;
-    }
-}
-
-public class PacketPropertyReadLengthAttribute : Attribute
-{
-    public int Length { get; set; }
-
-    public PacketPropertyReadLengthAttribute(int length)
-    {
-        Length = length;
-    }
-}
-
-

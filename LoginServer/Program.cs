@@ -1,13 +1,22 @@
-using System.Net;
 using Common.Database;
-using Common.Networking;
-using LoginServer.Handlers;
+using Common.Networking.Packets.Interfaces;
+using Common.Networking.Services;
+using LoginServer.Handlers.Packets;
+using LoginServer.Services.Background;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
+
+#region Packet Handlers
+builder.Services.AddSingleton<IPacketHandler, ClientStartPacketHandler>();
+builder.Services.AddSingleton<IPacketHandler, ClientLoginPacketHandler>();
+#endregion
+
+builder.Services.AddSingleton<PacketProcessor>();
+
+builder.Services.AddHostedService<LoginServerBackgroundService>();
 
 builder.Services.AddDbContext<EntityContext>(options =>
     options.UseMySql(dbConStr, ServerVersion.AutoDetect(dbConStr))
@@ -16,9 +25,5 @@ builder.Services.AddDbContext<EntityContext>(options =>
         .EnableDetailedErrors());
 
 var app = builder.Build();
-//Test.Read<ClientStartPacket>(new GameMessageBuffer(new byte [] { 05, 00, 0x68, 0x65, 0x6C, 0x6C, 0x6F, 04, 00, 0x68, 0x65, 0x6C, 0x6C }), out var packetInstance);
-//Console.WriteLine($"Serialized Packet Instance: {JsonConvert.SerializeObject(packetInstance)}");
-
-var _ = new GameServer(new IPEndPoint(IPAddress.Any, 8484));
 
 app.Run();

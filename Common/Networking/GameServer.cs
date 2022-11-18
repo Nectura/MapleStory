@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using Common.Networking.Enums;
 using Common.Networking.OperationCodes;
 
 namespace Common.Networking;
@@ -37,11 +38,17 @@ public sealed class GameServer
         }
     }
 
-    private void OnClientMessage(GameMessageBuffer message)
+    private void OnClientMessage(GameClient client, GameMessageBuffer message)
     {
         EClientOperationCode op = (EClientOperationCode)message.Read16U();
         Console.WriteLine($"Client sent {nameof(op)} ({op:X}): " +
             $"{BitConverter.ToString(message.GetBytes()).Replace('-', ' ')}");
-        //TODO handle message
+        if (op is EClientOperationCode.ClientStart)
+        {
+            client.Send(new GameMessage(EServerOperationCode.SetLoginBg)
+            {
+                { EGameMessageType.str, "MapLogin" }
+            });
+        }
     }
 }

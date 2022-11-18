@@ -2,5 +2,6 @@
 
 public enum EServerOperationCode : ushort
 {
-    Handshake = 0xE
+    Handshake = 0xE,
+    SetLoginBg = 0x16
 }

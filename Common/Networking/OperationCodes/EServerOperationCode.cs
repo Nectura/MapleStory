@@ -1,6 +1,6 @@
 ﻿namespace Common.Networking.OperationCodes;
 
-public enum EServerOperationCode
+public enum EServerOperationCode : ushort
 {
     Handshake = 0xE
 }

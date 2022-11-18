@@ -21,7 +21,7 @@ public sealed class GameMessageBuffer
         _reader = new(_stream);
         _writer = new(_stream);
     }
-
+    
     public byte[] GetBytes()
     {
         return _stream.ToArray();
@@ -58,5 +58,49 @@ public sealed class GameMessageBuffer
         Write16U((ushort)value.Length);
         foreach (char c in value)
             Write8U((byte)c);
+    }
+
+    public bool TryRead(Type conversionType, int? readLength, out object? value)
+    {
+        value = null;
+        
+        switch (conversionType)
+        {
+            case var _ when conversionType == typeof(sbyte):
+                value = Read8();
+                return true;
+            case var _ when conversionType == typeof(short):
+                value = Read16();
+                return true;
+            case var _ when conversionType == typeof(int):
+                value = Read32();
+                return true;
+            case var _ when conversionType == typeof(long):
+                value = Read64();
+                return true;
+            
+            case var _ when conversionType == typeof(byte):
+                value = Read8U();
+                return true;
+            case var _ when conversionType == typeof(ushort):
+                value = Read16U();
+                return true;
+            case var _ when conversionType == typeof(uint):
+                value = Read32U();
+                return true;
+            case var _ when conversionType == typeof(ulong):
+                value = Read64U();
+                return true;
+            
+            case var _ when conversionType == typeof(string):
+                value = ReadString();
+                return true;
+            
+            case var _ when conversionType == typeof(byte[]) && readLength.HasValue:
+                value = Read(readLength.Value);
+                return true;
+        }
+
+        return false;
     }
 }

@@ -15,12 +15,15 @@ public class Account : IAccount
     public byte[] PinSaltHash { get; set; } = Array.Empty<byte>();
     public byte[] PicHash { get; set; } = Array.Empty<byte>();
     public byte[] PicSaltHash { get; set; } = Array.Empty<byte>();
-    public int CharacterSlots { get; set; }
+    public bool HasAcceptedEula { get; set; } = false;
+    public int CharacterSlots { get; set; } = 5;
     public EWorld? LastWorldId { get; set; }
     public string? LastKnownIpAddress { get; set; }
     public EAccountType AccountType { get; set; } = EAccountType.Normal;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime LastLoggedInAt { get; set; }
 
+    [ForeignKey(nameof(Restriction))]
     public Guid? RestrictionId { get; set; }
     public virtual AccountRestriction? Restriction { get; set; }
 
@@ -32,5 +35,5 @@ public class Account : IAccount
 
     [NotMapped] public bool HasPic => PicHash != Array.Empty<byte>();
 
-    public ICollection<Character>? Characters { get; set; }
+    public virtual ICollection<Character>? Characters { get; set; }
 }

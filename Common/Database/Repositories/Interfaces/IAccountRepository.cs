@@ -1,8 +1,8 @@
-﻿using Common.Database.Models.Interfaces;
+﻿using Common.Database.Models;
 using Common.Database.Repositories.Abstract.Interfaces;
 
 namespace Common.Database.Repositories.Interfaces;
 
-public interface IAccountRepository<T> : IEntityRepository<T> where T : class, IAccount
+public interface IAccountRepository : IEntityRepository<Account>
 {
 }

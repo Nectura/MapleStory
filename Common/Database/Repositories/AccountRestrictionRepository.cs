@@ -4,7 +4,7 @@ using Common.Database.Repositories.Interfaces;
 
 namespace Common.Database.Repositories;
 
-public sealed class AccountRestrictionRepository : EntityRepository<AccountRestriction>, IAccountRestrictionRepository<AccountRestriction>
+public sealed class AccountRestrictionRepository : EntityRepository<AccountRestriction>, IAccountRestrictionRepository
 {
     public AccountRestrictionRepository(EntityContext context) : base(context)
     {

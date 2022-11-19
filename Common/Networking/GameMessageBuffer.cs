@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Common.Networking.Packets.Enums;
 
 namespace Common.Networking;
 
@@ -15,11 +16,12 @@ public sealed class GameMessageBuffer
         _writer = new BinaryWriter(_stream);
     }
 
-    public GameMessageBuffer(int capacity = 1024)
+    public GameMessageBuffer(EServerOperationCode opcode, int capacity = 1024)
     {
         _stream = new MemoryStream(capacity);
         _reader = new BinaryReader(_stream);
         _writer = new BinaryWriter(_stream);
+        WriteUShort((ushort) opcode);
     }
     
     public byte[] GetBytes()
@@ -27,39 +29,85 @@ public sealed class GameMessageBuffer
         return _stream.ToArray();
     }
 
-    public byte Read8U() => _reader.ReadByte();
-    public ushort Read16U() => _reader.ReadUInt16();
-    public uint Read32U() => _reader.ReadUInt32();
-    public ulong Read64U() => _reader.ReadUInt64();
-    public sbyte Read8() => _reader.ReadSByte();
-    public short Read16() => _reader.ReadInt16();
-    public int Read32() => _reader.ReadInt32();
-    public long Read64() => _reader.ReadInt64();
+    public byte ReadByte() => _reader.ReadByte();
+    public ushort ReadUShort() => _reader.ReadUInt16();
+    public uint ReadUInt() => _reader.ReadUInt32();
+    public ulong ReadULong() => _reader.ReadUInt64();
+    public sbyte ReadSByte() => _reader.ReadSByte();
+    public short ReadShort() => _reader.ReadInt16();
+    public int ReadInt() => _reader.ReadInt32();
+    public long ReadLong() => _reader.ReadInt64();
     public string ReadString()
     {
-        var size = Read16U();
+        var size = ReadUShort();
         var sb = new StringBuilder(size);
         for (var i = 0; i < size; i++)
-            sb.Append((char)Read8U());
+            sb.Append((char)ReadByte());
         return sb.ToString();
     }
-
+    public byte[] Read(int count) => _reader.ReadBytes(count);
     public bool CanRead(int size) => _reader.BaseStream.Length - _reader.BaseStream.Position >= size;
 
-    public byte[] Read(int count) => _reader.ReadBytes(count);
-    public void Write8U(byte value) => _writer.Write(value);
-    public void Write16U(ushort value) => _writer.Write(value);
-    public void Write32U(uint value) => _writer.Write(value);
-    public void Write64U(ulong value) => _writer.Write(value);
-    public void Write8(sbyte value) => _writer.Write(value);
-    public void Write16(short value) => _writer.Write(value);
-    public void Write32(int value) => _writer.Write(value);
-    public void Write64(long value) => _writer.Write(value);
-    public void WriteString(string value)
+    public GameMessageBuffer WriteByte(byte value = 0)
     {
-        Write16U((ushort)value.Length);
+        _writer.Write(value);
+        return this;
+    }
+    
+    public GameMessageBuffer WriteBool(bool value = false)
+    {
+        _writer.Write(value);
+        return this;
+    }
+
+    public GameMessageBuffer WriteUShort(ushort value = 0)
+    {
+        _writer.Write(value);
+        return this;
+    }
+
+    public GameMessageBuffer WriteUInt(uint value = 0)
+    {
+        _writer.Write(value);
+        return this;
+    }
+
+    public GameMessageBuffer WriteULong(ulong value = 0)
+    {
+        _writer.Write(value);
+        return this;
+    }
+
+    public GameMessageBuffer WriteSByte(sbyte value = 0)
+    {
+        _writer.Write(value);
+        return this;
+    }
+
+    public GameMessageBuffer WriteShort(short value = 0)
+    {
+        _writer.Write(value);
+        return this;
+    }
+
+    public GameMessageBuffer WriteInt(int value = 0)
+    {
+        _writer.Write(value);
+        return this;
+    }
+
+    public GameMessageBuffer WriteLong(long value = 0)
+    {
+        _writer.Write(value);
+        return this;
+    }
+
+    public GameMessageBuffer WriteString(string value)
+    {
+        WriteUShort((ushort)value.Length);
         foreach (char c in value)
-            Write8U((byte)c);
+            WriteByte((byte)c);
+        return this;
     }
 
     public bool TryRead(Type conversionType, int? readLength, out object? value)
@@ -69,29 +117,29 @@ public sealed class GameMessageBuffer
         switch (conversionType)
         {
             case var _ when conversionType == typeof(sbyte) && CanRead(1):
-                value = Read8();
+                value = ReadSByte();
                 return true;
             case var _ when conversionType == typeof(short) && CanRead(2):
-                value = Read16();
+                value = ReadShort();
                 return true;
             case var _ when conversionType == typeof(int) && CanRead(4):
-                value = Read32();
+                value = ReadInt();
                 return true;
             case var _ when conversionType == typeof(long) && CanRead(8):
-                value = Read64();
+                value = ReadLong();
                 return true;
             
             case var _ when conversionType == typeof(byte) && CanRead(1):
-                value = Read8U();
+                value = ReadByte();
                 return true;
             case var _ when conversionType == typeof(ushort) && CanRead(2):
-                value = Read16U();
+                value = ReadUShort();
                 return true;
             case var _ when conversionType == typeof(uint) && CanRead(4):
-                value = Read32U();
+                value = ReadUInt();
                 return true;
             case var _ when conversionType == typeof(ulong) && CanRead(8):
-                value = Read64U();
+                value = ReadULong();
                 return true;
             
             case var _ when conversionType == typeof(string) && CanRead(2):

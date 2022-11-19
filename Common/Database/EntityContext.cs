@@ -1,6 +1,8 @@
 ﻿using Common.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
+#pragma warning disable CS8618
+
 namespace Common.Database;
 
 public sealed class EntityContext : DbContext

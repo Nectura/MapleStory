@@ -1,5 +1,4 @@
 ﻿using Common.Networking;
-using Common.Networking.Enums;
 using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
 
@@ -9,12 +8,11 @@ public sealed class ClientValidationPacketHandler : IAsyncPacketHandler
 {
     public EClientOperationCode Opcode { get; init; } = EClientOperationCode.ClientValidation;
 
-    public Task HandlePacketAsync(GameClient client, GameMessageBuffer buffer, CancellationToken cancellationToken = default)
+    public Task HandlePacketAsync(IServiceScopeFactory scopeFactory, GameClient client, GameMessageBuffer buffer, CancellationToken cancellationToken = default)
     {
-        client.Send(new GameMessage(EServerOperationCode.SetLoginBackground)
-        {
-            { EGameMessageType.str, "MapLogin" }
-        });
+        client.Send(new GameMessageBuffer(EServerOperationCode.SetLoginBackground)
+            .WriteString("MapLogin") // WZ Background To Display
+        );
         return Task.CompletedTask;
     }
 }

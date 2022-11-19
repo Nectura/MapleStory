@@ -4,7 +4,7 @@ using Common.Database.Repositories.Interfaces;
 
 namespace Common.Database.Repositories;
 
-public sealed class AccountRepository : EntityRepository<Account>, IAccountRepository<Account>
+public sealed class AccountRepository : EntityRepository<Account>, IAccountRepository
 {
     public AccountRepository(EntityContext context) : base(context)
     {

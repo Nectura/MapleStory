@@ -1,12 +1,13 @@
-﻿using Common.Database.Models.Interfaces;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Common.Database.Models.Interfaces;
 using Common.Enums;
-
 namespace Common.Database.Models;
 
 public class Character : ICharacter
 {
     public int Id { get; set; }
 
+    [ForeignKey(nameof(Account))]
     public int AccountId { get; set; }
     public virtual Account? Account { get; set; }
 

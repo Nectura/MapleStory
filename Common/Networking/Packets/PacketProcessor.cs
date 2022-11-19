@@ -2,20 +2,22 @@
 using Common.Networking.Packets.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common.Networking.Packets.Services;
+namespace Common.Networking.Packets;
 
-public sealed class PacketProcessor
+public sealed class PacketProcessor : IPacketProcessor
 {
     private readonly Dictionary<EClientOperationCode, IAsyncPacketHandler> _packetHandlers;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public PacketProcessor(IServiceProvider serviceProvider)
+    public PacketProcessor(IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory)
     {
         _packetHandlers = serviceProvider.GetServices<IAsyncPacketHandler>().ToDictionary(m => m.Opcode, m => m);
+        _scopeFactory = scopeFactory;
     }
 
     public void ProcessPacket(GameClient client, GameMessageBuffer buffer)
     {
-        var opcodeVal = buffer.Read16U();
+        var opcodeVal = buffer.ReadUShort();
 
         if (!Enum.IsDefined(typeof(EClientOperationCode), opcodeVal))
         {
@@ -31,6 +33,6 @@ public sealed class PacketProcessor
             return;
         }
         
-        Task.Run(async () => await _packetHandlers[opcode].HandlePacketAsync(client, buffer));
+        Task.Run(async () => await _packetHandlers[opcode].HandlePacketAsync(_scopeFactory, client, buffer));
     }
 }

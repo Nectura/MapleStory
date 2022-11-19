@@ -1,6 +1,9 @@
 ﻿using System.Net;
 using Common.Networking;
-using Common.Networking.Packets.Services;
+using Common.Networking.Configuration;
+using Common.Networking.Packets.Interfaces;
+using LoginServer.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace LoginServer.Services.Background;
 
@@ -8,9 +11,9 @@ public sealed class LoginServerBackgroundService : IHostedService
 {
     private readonly GameServer _gameServer;
 
-    public LoginServerBackgroundService(PacketProcessor packetProcessor)
+    public LoginServerBackgroundService(IPacketProcessor packetProcessor, IOptions<ServerConfig> serverConfig)
     {
-        _gameServer = new GameServer(new IPEndPoint(IPAddress.Any, 8484), packetProcessor);
+        _gameServer = new GameServer(serverConfig.Value, packetProcessor);
     }
     
     public Task StartAsync(CancellationToken cancellationToken)

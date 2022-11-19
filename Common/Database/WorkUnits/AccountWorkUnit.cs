@@ -1,13 +1,18 @@
-﻿namespace Common.Database.WorkUnits;
+﻿using Common.Database.Repositories;
+using Common.Database.Repositories.Interfaces;
+using Common.Database.WorkUnits.Abstract;
+using Common.Database.WorkUnits.Interfaces;
 
-/* public class AccountWorkUnit : UnitOfWork
+namespace Common.Database.WorkUnits;
+
+public sealed class AccountWorkUnit : UnitOfWork, IAccountWorkUnit
 {
     public AccountWorkUnit(EntityContext entityContext) : base(entityContext)
     {
-        UserAccounts = new AccountRepository<Account>(entityContext);
-        AccountRestrictions = new AccountRestrictionRepository<AccountRestriction>(entityContext);
+        Accounts = new AccountRepository(entityContext);
+        AccountRestrictions = new AccountRestrictionRepository(entityContext);
     }
     
-    public IAccountRepository UserAccounts { get; }
+    public IAccountRepository Accounts { get; }
     public IAccountRestrictionRepository AccountRestrictions { get; }
-} */
+}

@@ -11,7 +11,7 @@ public static class GameMessageBufferExtensions
         public int? ReadLength { get; init; }
     }
     
-    public static T ParsePacketInstance<T>(this GameMessageBuffer buffer) where T : struct
+    public static T ParsePacketInstance<T>(this GameMessageBuffer buffer) where T : class
     {
         var packetInstance = Activator.CreateInstance<T>();
         var dict = new SortedDictionary<uint, PacketProperty>();

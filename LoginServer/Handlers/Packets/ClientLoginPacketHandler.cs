@@ -1,7 +1,9 @@
 ﻿using Common.Networking;
+using Common.Networking.Enums;
 using Common.Networking.Extensions;
 using Common.Networking.OperationCodes;
 using Common.Networking.Packets.Interfaces;
+using LoginServer.Handlers.Packets.Enums;
 using LoginServer.Handlers.Packets.Structs;
 using Newtonsoft.Json;
 
@@ -15,6 +17,10 @@ public sealed class ClientLoginPacketHandler : IPacketHandler
     {
         var packetInstance = buffer.ParsePacketInstance<ClientLoginPacket>();
         Console.WriteLine($"Received And Serialized Packet Instance: {JsonConvert.SerializeObject(packetInstance)}");
+        client.Send(new GameMessage(EServerOperationCode.CheckPasswordResult)
+        {
+            { EGameMessageType.u8, ELoginResult.Unregistered }
+        });
         return Task.CompletedTask;
     }
 }

@@ -5,7 +5,7 @@ using Common.Networking.Packets.Interfaces;
 namespace LoginServer.Handlers.Packets.Structs;
 
 [PacketHandler(EClientOperationCode.ClientLogin)]
-public record struct ClientLoginPacket() : IPacketStructure
+public record ClientLoginPacket : IPacketStructure
 {
     [PacketProperty(0)] public string UserName { get; init; } = "";
     [PacketProperty(1)] public string Password { get; init; } = "";

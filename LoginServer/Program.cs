@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
 
 #region Packet Handlers
-builder.Services.AddSingleton<IPacketHandler, ClientStartPacketHandler>();
+builder.Services.AddSingleton<IPacketHandler, ClientValidationPacketHandler>();
 builder.Services.AddSingleton<IPacketHandler, ClientLoginPacketHandler>();
 #endregion
 

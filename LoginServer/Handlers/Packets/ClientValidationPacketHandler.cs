@@ -5,13 +5,13 @@ using Common.Networking.Packets.Interfaces;
 
 namespace LoginServer.Handlers.Packets;
 
-public sealed class ClientStartPacketHandler : IPacketHandler
+public sealed class ClientValidationPacketHandler : IPacketHandler
 {
-    public EClientOperationCode Opcode { get; init; } = EClientOperationCode.ClientStart;
+    public EClientOperationCode Opcode { get; init; } = EClientOperationCode.ClientValidation;
 
     public Task HandlePacketAsync(GameClient client, GameMessageBuffer buffer)
     {
-        client.Send(new GameMessage(EServerOperationCode.SetLoginBg)
+        client.Send(new GameMessage(EServerOperationCode.SetLoginBackground)
         {
             { EGameMessageType.str, "MapLogin" }
         });

@@ -1,4 +1,4 @@
-﻿namespace Common.Networking.OperationCodes;
+﻿namespace Common.Networking.Packets.Enums;
 
 public enum EServerOperationCode : ushort
 {

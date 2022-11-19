@@ -1,4 +1,5 @@
-﻿using Common.Enums;
+﻿using Common.Database.Enums;
+using Common.Enums;
 
 namespace Common.Database.Models.Interfaces;
 

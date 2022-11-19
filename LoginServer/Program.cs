@@ -1,7 +1,7 @@
 using Common.Database;
 using Common.Networking.Packets.Interfaces;
-using Common.Networking.Services;
-using LoginServer.Handlers.Packets;
+using Common.Networking.Packets.Services;
+using LoginServer.Packets.Handlers;
 using LoginServer.Services.Background;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,8 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
 
 #region Packet Handlers
-builder.Services.AddSingleton<IPacketHandler, ClientValidationPacketHandler>();
-builder.Services.AddSingleton<IPacketHandler, ClientLoginPacketHandler>();
+builder.Services.AddSingleton<IAsyncPacketHandler, ClientValidationPacketHandler>();
+builder.Services.AddSingleton<IAsyncPacketHandler, ClientLoginPacketHandler>();
 #endregion
 
 builder.Services.AddSingleton<PacketProcessor>();

@@ -1,16 +1,16 @@
-﻿using Common.Networking.OperationCodes;
+﻿using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Common.Networking.Services;
+namespace Common.Networking.Packets.Services;
 
 public sealed class PacketProcessor
 {
-    private readonly Dictionary<EClientOperationCode, IPacketHandler> _packetHandlers;
+    private readonly Dictionary<EClientOperationCode, IAsyncPacketHandler> _packetHandlers;
 
     public PacketProcessor(IServiceProvider serviceProvider)
     {
-        _packetHandlers = serviceProvider.GetServices<IPacketHandler>().ToDictionary(m => m.Opcode, m => m);
+        _packetHandlers = serviceProvider.GetServices<IAsyncPacketHandler>().ToDictionary(m => m.Opcode, m => m);
     }
 
     public void ProcessPacket(GameClient client, GameMessageBuffer buffer)

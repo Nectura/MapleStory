@@ -1,11 +1,11 @@
-﻿using Common.Networking.OperationCodes;
-using Common.Networking.Packets.Attributes;
+﻿using Common.Networking.Packets.Attributes;
+using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
 
-namespace LoginServer.Handlers.Packets.Structs;
+namespace LoginServer.Packets.Models;
 
 [PacketHandler(EClientOperationCode.ClientLogin)]
-public record ClientLoginPacket : IPacketStructure
+public record AccountLoginPacket : IPacketStructure
 {
     [PacketProperty(0)] public string UserName { get; init; } = "";
     [PacketProperty(1)] public string Password { get; init; } = "";

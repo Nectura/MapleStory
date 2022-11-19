@@ -1,4 +1,4 @@
-﻿namespace LoginServer.Handlers.Packets.Enums;
+﻿namespace LoginServer.Packets.Enums;
 
 public enum ELoginResult : byte
 {

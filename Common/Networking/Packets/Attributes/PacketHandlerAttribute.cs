@@ -1,8 +1,9 @@
-﻿using Common.Networking.OperationCodes;
+﻿using Common.Networking.Packets.Enums;
 
 namespace Common.Networking.Packets.Attributes;
 
-public class PacketHandlerAttribute : Attribute
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+public sealed class PacketHandlerAttribute : Attribute
 {
     public EClientOperationCode OperationCode { get; set; }
 

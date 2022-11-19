@@ -2,8 +2,8 @@
 
 public record struct Position
 {
-    public short X { get; init; }
-    public short Y { get; init; }
+    public ushort X { get; set; }
+    public ushort Y { get; set; }
 
     public override string ToString()
     {

@@ -1,6 +1,6 @@
 ﻿using Common.Networking.Cryptography;
-using Common.Networking.OperationCodes;
 using System.Net.Sockets;
+using Common.Networking.Packets.Enums;
 using static Common.Networking.Enums.EGameMessageType;
 
 namespace Common.Networking;

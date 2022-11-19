@@ -1,9 +1,9 @@
-﻿using Common.Networking.OperationCodes;
+﻿using Common.Networking.Packets.Enums;
 
 namespace Common.Networking.Packets.Interfaces;
 
 public interface IPacketHandler
 {
     EClientOperationCode Opcode { get; init; }
-    Task HandlePacketAsync(GameClient client, GameMessageBuffer buffer);
+    void HandlePacket(GameClient client, GameMessageBuffer buffer);
 }

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using Common.Networking.Services;
+using Common.Networking.Packets.Services;
 
 namespace Common.Networking;
 

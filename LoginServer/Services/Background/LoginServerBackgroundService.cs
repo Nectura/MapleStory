@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Common.Networking;
-using Common.Networking.Services;
+using Common.Networking.Packets.Services;
 
 namespace LoginServer.Services.Background;
 

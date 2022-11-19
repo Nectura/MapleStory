@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Common.Database.Enums;
 using Common.Database.Models.Interfaces;
 using Common.Enums;
 

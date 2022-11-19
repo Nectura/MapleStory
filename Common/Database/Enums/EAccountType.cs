@@ -1,4 +1,4 @@
-﻿namespace Common.Enums;
+﻿namespace Common.Database.Enums;
 
 public enum EAccountType
 {

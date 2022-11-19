@@ -12,13 +12,13 @@ public sealed class GameClient
     private readonly Socket _socket;
     private readonly MapleIV _sendVector, _recvVector;
 
-    public event Action<GameClient, GameMessageBuffer> OnMessage;
+    public event Action<GameClient, GameMessageBuffer>? OnMessage;
 
     public GameClient(Socket socket)
     {
         _socket = socket;
-        _sendVector = new((uint)Random.Shared.Next());
-        _recvVector = new((uint)Random.Shared.Next());
+        _sendVector = new MapleIV((uint)Random.Shared.Next());
+        _recvVector = new MapleIV((uint)Random.Shared.Next());
         SendRaw(new GameMessage(EServerOperationCode.Handshake)
         {
             { u16, (ushort)76 },
@@ -28,6 +28,7 @@ public sealed class GameClient
             { u8, (byte)9 }
         });
         socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, out SocketError errorCode, OnReceive, null);
+        // TODO errorCode
     }
 
     public void OnReceive(IAsyncResult ar)
@@ -63,13 +64,13 @@ public sealed class GameClient
 
     public void Send(GameMessage payload)
     {
-        byte[] payloadBuffer = payload.GetMessageBuffer().GetBytes();
-        byte[] message = new byte[payloadBuffer.Length + 4];
+        var payloadBuffer = payload.GetMessageBuffer().GetBytes();
+        var message = new byte[payloadBuffer.Length + 4];
         MapleAES.GetHeader(message, _sendVector, 76);
         Shanda.EncryptTransform(payloadBuffer);
         MapleAES.Transform(payloadBuffer, _sendVector);
         Buffer.BlockCopy(payloadBuffer, 0, message, 4, payloadBuffer.Length);
-        for (int offset = 0; offset < message.Length;)
+        for (var offset = 0; offset < message.Length;)
             offset += _socket.Send(message, offset, message.Length - offset, SocketFlags.None, out SocketError errorCode);
         // TODO errorCode
     }

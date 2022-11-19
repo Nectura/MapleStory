@@ -8,31 +8,36 @@ public static class GameMessageBufferExtensions
     private struct PacketProperty
     {
         public PropertyInfo PropertyInfo { get; init; }
-        public int? Length { get; init; }
+        public int? ReadLength { get; init; }
     }
     
-    public static void Read<T>(GameMessageBuffer buffer, out T packetInstance) where T : class
+    public static T ParsePacketInstance<T>(this GameMessageBuffer buffer) where T : struct
     {
-        packetInstance = Activator.CreateInstance<T>();
+        var packetInstance = Activator.CreateInstance<T>();
         var dict = new SortedDictionary<uint, PacketProperty>();
         
         // get the order of each property and append them in a sorted manner to a dictionary
         foreach (var property in packetInstance.GetType().GetProperties())
         {
-            var packetOrderAttr = property.GetCustomAttribute<PacketOrderAttribute>();
-            var packetReaderLenAttr = property.GetCustomAttribute<PacketPropertyReadLengthAttribute>();
-            dict.Add(packetOrderAttr!.Order, new PacketProperty
+            var packetOrderAttr = property.GetCustomAttribute<PacketPropertyAttribute>();
+            
+            if (packetOrderAttr == default) 
+                continue;
+            
+            dict.Add(packetOrderAttr.Order, new PacketProperty
             {
                 PropertyInfo = property,
-                Length = packetReaderLenAttr?.Length
+                ReadLength = packetOrderAttr.HasReadLength ? packetOrderAttr.ReadLength : default
             });
         }
 
         // iterate over the properties in the dictionary and try to read them with our GameMessageBuffer
         foreach (var packetProperty in dict.Values)
         {
-            if (!buffer.TryRead(packetProperty.PropertyInfo.PropertyType, packetProperty.Length, out var val)) continue;
+            if (!buffer.TryRead(packetProperty.PropertyInfo.PropertyType, packetProperty.ReadLength, out var val)) continue;
             packetProperty.PropertyInfo.SetValue(packetInstance, val);
         }
+
+        return packetInstance;
     } 
 }

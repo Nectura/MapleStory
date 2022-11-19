@@ -10,16 +10,16 @@ public sealed class GameMessageBuffer
 
     public GameMessageBuffer(byte[] buffer)
     {
-        _stream = new(buffer);
-        _reader = new(_stream);
-        _writer = new(_stream);
+        _stream = new MemoryStream(buffer);
+        _reader = new BinaryReader(_stream);
+        _writer = new BinaryWriter(_stream);
     }
 
     public GameMessageBuffer(int capacity = 1024)
     {
-        _stream = new(capacity);
-        _reader = new(_stream);
-        _writer = new(_stream);
+        _stream = new MemoryStream(capacity);
+        _reader = new BinaryReader(_stream);
+        _writer = new BinaryWriter(_stream);
     }
     
     public byte[] GetBytes()
@@ -37,12 +37,14 @@ public sealed class GameMessageBuffer
     public long Read64() => _reader.ReadInt64();
     public string ReadString()
     {
-        ushort size = Read16U();
-        StringBuilder sb = new(size);
-        for (int i = 0; i < size; i++)
+        var size = Read16U();
+        var sb = new StringBuilder(size);
+        for (var i = 0; i < size; i++)
             sb.Append((char)Read8U());
         return sb.ToString();
     }
+
+    public bool CanRead(int size) => _reader.BaseStream.Length - _reader.BaseStream.Position >= size;
 
     public byte[] Read(int count) => _reader.ReadBytes(count);
     public void Write8U(byte value) => _writer.Write(value);
@@ -66,37 +68,37 @@ public sealed class GameMessageBuffer
         
         switch (conversionType)
         {
-            case var _ when conversionType == typeof(sbyte):
+            case var _ when conversionType == typeof(sbyte) && CanRead(1):
                 value = Read8();
                 return true;
-            case var _ when conversionType == typeof(short):
+            case var _ when conversionType == typeof(short) && CanRead(2):
                 value = Read16();
                 return true;
-            case var _ when conversionType == typeof(int):
+            case var _ when conversionType == typeof(int) && CanRead(4):
                 value = Read32();
                 return true;
-            case var _ when conversionType == typeof(long):
+            case var _ when conversionType == typeof(long) && CanRead(8):
                 value = Read64();
                 return true;
             
-            case var _ when conversionType == typeof(byte):
+            case var _ when conversionType == typeof(byte) && CanRead(1):
                 value = Read8U();
                 return true;
-            case var _ when conversionType == typeof(ushort):
+            case var _ when conversionType == typeof(ushort) && CanRead(2):
                 value = Read16U();
                 return true;
-            case var _ when conversionType == typeof(uint):
+            case var _ when conversionType == typeof(uint) && CanRead(4):
                 value = Read32U();
                 return true;
-            case var _ when conversionType == typeof(ulong):
+            case var _ when conversionType == typeof(ulong) && CanRead(8):
                 value = Read64U();
                 return true;
             
-            case var _ when conversionType == typeof(string):
+            case var _ when conversionType == typeof(string) && CanRead(2):
                 value = ReadString();
                 return true;
             
-            case var _ when conversionType == typeof(byte[]) && readLength.HasValue:
+            case var _ when conversionType == typeof(byte[]) && readLength.HasValue && CanRead(readLength.Value):
                 value = Read(readLength.Value);
                 return true;
         }

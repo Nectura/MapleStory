@@ -2,6 +2,7 @@
 using Common.Networking.Extensions;
 using Common.Networking.OperationCodes;
 using Common.Networking.Packets.Interfaces;
+using LoginServer.Handlers.Packets.Structs;
 using Newtonsoft.Json;
 
 namespace LoginServer.Handlers.Packets;
@@ -12,7 +13,7 @@ public sealed class ClientLoginPacketHandler : IPacketHandler
 
     public Task HandlePacketAsync(GameClient client, GameMessageBuffer buffer)
     {
-        GameMessageBufferExtensions.Read<Structs.ClientLoginPacket>(buffer, out var packetInstance);
+        var packetInstance = buffer.ParsePacketInstance<ClientLoginPacket>();
         Console.WriteLine($"Received And Serialized Packet Instance: {JsonConvert.SerializeObject(packetInstance)}");
         return Task.CompletedTask;
     }

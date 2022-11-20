@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Common.Networking.Cryptography;
 using System.Net.Sockets;
+using Common.Database.Models.Interfaces;
 using Common.Networking.Configuration;
 using Common.Networking.Extensions;
 using Common.Networking.Packets.Enums;
@@ -18,6 +19,8 @@ public sealed class GameClient
     public event Action<GameClient, GameMessageBuffer>? OnMessage;
 
     public IPAddress IpAddress => _socket.GetRemoteIpAddress();
+    
+    public IAccount? Account { get; set; }
 
     public GameClient(Socket socket, ServerConfig serverConfig)
     {
@@ -31,13 +34,13 @@ public sealed class GameClient
             .WriteString(_serverConfig.ClientPatchVersion)
             .WriteUInt(_recvVector.Value)
             .WriteUInt(_sendVector.Value)
-            .WriteByte(_serverConfig.ClientLocale));
+            .WriteByte((byte)_serverConfig.ClientLocale));
         
         socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, out SocketError errorCode, OnReceive, null);
         // TODO errorCode
     }
 
-    public void OnReceive(IAsyncResult ar)
+    private void OnReceive(IAsyncResult ar)
     {
         _size += _socket.EndReceive(ar, out SocketError errorCode);
         // TODO errorCode
@@ -76,5 +79,10 @@ public sealed class GameClient
         for (int offset = 0; offset < payloadBuffer.Length;)
             offset += _socket.Send(payloadBuffer, offset, payloadBuffer.Length - offset, SocketFlags.None, out SocketError errorCode);
         // TODO errorCode
+    }
+
+    public async Task DisconnectAsync(CancellationToken cancellationToken = default)
+    {
+        await _socket.DisconnectAsync(false, cancellationToken);
     }
 }

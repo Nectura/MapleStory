@@ -10,9 +10,6 @@ public sealed class ClientValidationPacketHandler : IAsyncPacketHandler
 
     public Task HandlePacketAsync(IServiceScopeFactory scopeFactory, GameClient client, GameMessageBuffer buffer, CancellationToken cancellationToken = default)
     {
-        client.Send(new GameMessageBuffer(EServerOperationCode.SetLoginBackground)
-            .WriteString("MapLogin") // WZ Background To Display
-        );
         return Task.CompletedTask;
     }
 }

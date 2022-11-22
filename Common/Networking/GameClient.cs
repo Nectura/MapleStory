@@ -1,7 +1,8 @@
 ﻿using System.Net;
 using Common.Networking.Cryptography;
 using System.Net.Sockets;
-using Common.Database.Models.Interfaces;
+using Common.Database.Models;
+using Common.Enums;
 using Common.Networking.Configuration;
 using Common.Networking.Extensions;
 using Common.Networking.Packets.Enums;
@@ -20,7 +21,9 @@ public sealed class GameClient
 
     public IPAddress IpAddress => _socket.GetRemoteIpAddress();
     
-    public IAccount? Account { get; set; }
+    public Account? Account { get; set; }
+    public EWorld? World { get; set; }
+    public byte? Channel { get; set; }
 
     public GameClient(Socket socket, ServerConfig serverConfig)
     {

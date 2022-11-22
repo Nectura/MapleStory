@@ -3,6 +3,7 @@ using System;
 using Common.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Common.Migrations
 {
     [DbContext(typeof(EntityContext))]
-    partial class EntityContextModelSnapshot : ModelSnapshot
+    [Migration("20221122165043_CharacterModelChanges3")]
+    partial class CharacterModelChanges3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,6 +177,9 @@ namespace Common.Migrations
                     b.Property<ushort>("Job")
                         .HasColumnType("smallint unsigned");
 
+                    b.Property<uint>("JobCategory")
+                        .HasColumnType("int unsigned");
+
                     b.Property<byte>("Level")
                         .HasColumnType("tinyint unsigned");
 
@@ -218,9 +224,6 @@ namespace Common.Migrations
                         .HasColumnType("tinyint unsigned");
 
                     b.Property<ushort>("Strength")
-                        .HasColumnType("smallint unsigned");
-
-                    b.Property<ushort>("SubJob")
                         .HasColumnType("smallint unsigned");
 
                     b.Property<byte>("UsableSlots")

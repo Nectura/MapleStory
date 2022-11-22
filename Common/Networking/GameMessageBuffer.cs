@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 using Common.Networking.Packets.Enums;
 
 namespace Common.Networking;
@@ -59,6 +60,25 @@ public sealed class GameMessageBuffer
         _writer.Write(value);
         return this;
     }
+    
+    public GameMessageBuffer WriteInvertedBool(bool value = false)
+    {
+        _writer.Write(!value);
+        return this;
+    }
+    
+    public GameMessageBuffer WriteBytes(byte[] value)
+    {
+        _writer.Write(value);
+        return this;
+    }
+    
+    public GameMessageBuffer WriteIpEndpoint(IPEndPoint ipEndpoint)
+    {
+        WriteBytes(ipEndpoint.Address.GetAddressBytes());
+        WriteUShort((ushort)ipEndpoint.Port);
+        return this;
+    }
 
     public GameMessageBuffer WriteUShort(ushort value = 0)
     {
@@ -102,11 +122,23 @@ public sealed class GameMessageBuffer
         return this;
     }
 
-    public GameMessageBuffer WriteString(string value)
+    public GameMessageBuffer WriteString(string value, int? minLength = default)
     {
-        WriteUShort((ushort)value.Length);
-        foreach (char c in value)
-            WriteByte((byte)c);
+        if (!minLength.HasValue)
+            WriteUShort((ushort)value.Length);
+        var lengthToAppend = minLength.HasValue ? Math.Min(value.Length, minLength.Value) : value.Length;
+        for (var i = 0; i < lengthToAppend; i++)
+            WriteByte((byte) (i < value.Length ? value[i] : 0));
+        return this;
+    }
+    
+    public GameMessageBuffer WriteFixedString(string value, int length)
+    {
+        for (int i = 0; i < length; i++)
+            if (i < value.Length)
+                WriteByte((byte)value[i]);
+            else
+                WriteByte();
         return this;
     }
 

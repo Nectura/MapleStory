@@ -1,6 +1,6 @@
 ﻿namespace Common.Enums;
 
-public enum EJob : short
+public enum EJob : ushort
 {
     Beginner,
 

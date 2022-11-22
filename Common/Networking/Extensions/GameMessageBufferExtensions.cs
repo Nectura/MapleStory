@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Common.Database.Models;
 using Common.Networking.Packets.Attributes;
 
 namespace Common.Networking.Extensions;
@@ -40,4 +41,64 @@ public static class GameMessageBufferExtensions
 
         return packetInstance;
     } 
+    
+    public static GameMessageBuffer WriteCharacterInfo(this GameMessageBuffer buffer, Character character)
+    {
+        buffer.WriteCharacterStats(character);
+        buffer.WriteCharacterAppearance(character);
+        buffer.WriteByte(); // VAC
+        buffer.WriteByte(); // Ranking
+        return buffer;
+    }
+    
+    public static GameMessageBuffer WriteCharacterStats(this GameMessageBuffer buffer, Character character)
+    {
+        buffer.WriteInt(character.Id);
+        buffer.WriteFixedString(character.Name, 13);
+        buffer.WriteByte((byte)character.Gender);
+        buffer.WriteByte(character.SkinColor);
+        buffer.WriteUInt(character.Face);
+        buffer.WriteUInt(character.HairStyle + character.HairColor);
+        buffer.WriteByte(character.Level);
+        buffer.WriteUShort((ushort)character.Job);
+        buffer.WriteUShort(character.Strength);
+        buffer.WriteUShort(character.Dexterity);
+        buffer.WriteUShort(character.Intelligence);
+        buffer.WriteUShort(character.Luck);
+        buffer.WriteUInt(character.HitPoints);
+        buffer.WriteUInt(character.MaxHitPoints);
+        buffer.WriteUInt(character.ManaPoints);
+        buffer.WriteUInt(character.MaxManaPoints);
+        buffer.WriteUShort(character.AbilityPoints);
+        buffer.WriteUShort(character.SkillPoints);
+        buffer.WriteUInt(character.Experience);
+        buffer.WriteUShort(character.Fame);
+        buffer.WriteUInt(character.GachaponExperience);
+        buffer.WriteULong();
+        buffer.WriteUInt(character.MapId);
+        buffer.WriteByte(character.SpawnPoint);
+        buffer.WriteUShort(character.SubJob);
+        return buffer;
+    }
+    
+    public static GameMessageBuffer WriteCharacterAppearance(this GameMessageBuffer buffer, Character character)
+    {
+        buffer.WriteByte((byte)character.Gender);
+        buffer.WriteByte(character.SkinColor);
+        buffer.WriteUInt(character.Face);
+        buffer.WriteBool(false); //megaphone usage
+        buffer.WriteUInt(character.HairStyle + character.HairColor);
+        buffer.WriteCharacterEquipmentData(character);
+        return buffer;
+    }
+    
+    public static GameMessageBuffer WriteCharacterEquipmentData(this GameMessageBuffer buffer, Character character)
+    {
+        buffer.WriteSByte(-1);
+        buffer.WriteSByte(-1);
+        buffer.WriteUInt(); //cash weapon
+        for (var i = 0; i < 3; i++)
+            buffer.WriteUInt(); // pets
+        return buffer;
+    }
 }

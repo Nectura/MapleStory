@@ -30,6 +30,7 @@ public sealed class ClientLoginPacketHandler : IAsyncPacketHandler
 
         var account = await workUnit.Accounts
             .Query(m => m.UserName == packetInstance.UserName)
+            .Include(m => m.Characters)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (account == default)
@@ -82,7 +83,7 @@ public sealed class ClientLoginPacketHandler : IAsyncPacketHandler
         SendLoginSuccessResult(client, account);
     }
 
-    private void SendLoginSuccessResult(GameClient client, IAccount account)
+    private void SendLoginSuccessResult(GameClient client, Account account)
     {
         client.Account = account;
         client.Send(new GameMessageBuffer(EServerOperationCode.CheckPasswordResult)

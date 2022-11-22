@@ -13,28 +13,29 @@ public class Character : ICharacter
 
     public EWorld WorldId { get; set; }
     public string Name { get; set; } = string.Empty;
-    public byte Level { get; set; }
-    public int Experience { get; set; }
+    public byte Level { get; set; } = 1;
+    public uint Experience { get; set; }
     public EJob Job { get; set; }
-    public short Fame { get; set; }
-    public int GachaponExperience { get; set; }
-    public short Strength { get; set; }
-    public short Dexterity { get; set; }
-    public short Luck { get; set; }
-    public short Intelligence { get; set; }
-    public short MaxHitPoints { get; set; }
-    public short MaxManaPoints { get; set; }
-    public short HitPoints { get; set; }
-    public short ManaPoints { get; set; }
-    public int Mesos { get; set; }
+    public ushort SubJob { get; set; }
+    public ushort Fame { get; set; }
+    public uint GachaponExperience { get; set; }
+    public ushort Strength { get; set; }
+    public ushort Dexterity { get; set; }
+    public ushort Luck { get; set; }
+    public ushort Intelligence { get; set; }
+    public ushort MaxHitPoints { get; set; }
+    public ushort MaxManaPoints { get; set; }
+    public ushort HitPoints { get; set; }
+    public ushort ManaPoints { get; set; }
+    public uint Mesos { get; set; }
     public EGender Gender { get; set; }
-    public int HairStyle { get; set; }
-    public int HairColor { get; set; }
-    public byte Skin { get; set; }
-    public int Face { get; set; }
-    public short AbilityPoints { get; set; }
-    public short SkillPoints { get; set; }
-    public int MapId { get; set; }
+    public uint HairStyle { get; set; }
+    public byte HairColor { get; set; }
+    public byte SkinColor { get; set; }
+    public uint Face { get; set; }
+    public ushort AbilityPoints { get; set; }
+    public ushort SkillPoints { get; set; }
+    public uint MapId { get; set; }
     public byte SpawnPoint { get; set; }
     public byte BuddyLimit { get; set; }
     public byte EquipmentSlots { get; set; }
@@ -42,10 +43,10 @@ public class Character : ICharacter
     public byte SetupSlots { get; set; }
     public byte EtceteraSlots { get; set; }
     public byte CashSlots { get; set; }
-    public short X { get; set; }
-    public short Y { get; set; }
+    public ushort X { get; set; }
+    public ushort Y { get; set; }
     public byte Stance { get; set; }
-    public short Foothold { get; set; }
+    public ushort Foothold { get; set; }
     public bool ExperienceLocked { get; set; }
     public bool LevelLocked { get; set; }
 }

@@ -9,27 +9,28 @@ public interface ICharacter
     EWorld WorldId { get; set; }
     string Name { get; set; }
     byte Level { get; set; }
-    int Experience { get; set; }
+    uint Experience { get; set; }
     EJob Job { get; set; }
-    short Fame { get; set; }
-    int GachaponExperience { get; set; }
-    short Strength { get; set; }
-    short Dexterity { get; set; }
-    short Luck { get; set; }
-    short Intelligence { get; set; }
-    short MaxHitPoints { get; set; }
-    short MaxManaPoints { get; set; }
-    short HitPoints { get; set; }
-    short ManaPoints { get; set; }
-    int Mesos { get; set; }
+    ushort SubJob { get; set; }
+    ushort Fame { get; set; }
+    uint GachaponExperience { get; set; }
+    ushort Strength { get; set; }
+    ushort Dexterity { get; set; }
+    ushort Luck { get; set; }
+    ushort Intelligence { get; set; }
+    ushort MaxHitPoints { get; set; }
+    ushort MaxManaPoints { get; set; }
+    ushort HitPoints { get; set; }
+    ushort ManaPoints { get; set; }
+    uint Mesos { get; set; }
     EGender Gender { get; set; }
-    int HairStyle { get; set; }
-    int HairColor { get; set; }
-    byte Skin { get; set; }
-    int Face { get; set; }
-    short AbilityPoints { get; set; }
-    short SkillPoints { get; set; }
-    int MapId { get; set; }
+    uint HairStyle { get; set; }
+    byte HairColor { get; set; }
+    byte SkinColor { get; set; }
+    uint Face { get; set; }
+    ushort AbilityPoints { get; set; }
+    ushort SkillPoints { get; set; }
+    uint MapId { get; set; }
     byte SpawnPoint { get; set; }
     byte BuddyLimit { get; set; }
     byte EquipmentSlots { get; set; }
@@ -37,10 +38,10 @@ public interface ICharacter
     byte SetupSlots { get; set; }
     byte EtceteraSlots { get; set; }
     byte CashSlots { get; set; }
-    short X { get; set; }
-    short Y { get; set; }
+    ushort X { get; set; }
+    ushort Y { get; set; }
     byte Stance { get; set; }
-    short Foothold { get; set; }
+    ushort Foothold { get; set; }
     bool ExperienceLocked { get; set; }
     bool LevelLocked { get; set; }
 }

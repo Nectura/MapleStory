@@ -39,6 +39,9 @@ builder.Services.AddSingleton<IAsyncPacketHandler, ClientLoginPacketHandler>();
 builder.Services.AddSingleton<IAsyncPacketHandler, CheckUserLimitPacketHandler>();
 builder.Services.AddSingleton<IAsyncPacketHandler, WorldInfoRequestPacketHandler>();
 builder.Services.AddSingleton<IAsyncPacketHandler, SelectWorldPacketHandler>();
+builder.Services.AddSingleton<IAsyncPacketHandler, CharacterNameCheckHandler>();
+builder.Services.AddSingleton<IAsyncPacketHandler, CharacterCreationHandler>();
+builder.Services.AddSingleton<IAsyncPacketHandler, CharacterDeletionHandler>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountRestrictionRepository, AccountRestrictionRepository>();

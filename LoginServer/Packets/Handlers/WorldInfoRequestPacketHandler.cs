@@ -1,4 +1,5 @@
-﻿using Common.Networking;
+﻿using Common.Enums;
+using Common.Networking;
 using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
 
@@ -18,10 +19,11 @@ public sealed class WorldInfoRequestPacketHandler : IAsyncPacketHandler
     
     private void SendWorldInfo(GameClient client)
     {
+        var worldId = (byte)EWorld.Kradia;
         var responseBuffer = new GameMessageBuffer(EServerOperationCode.WorldInformation);
         responseBuffer
-            .WriteByte(1) // worldId
-            .WriteString("1") // worldId
+            .WriteByte(worldId) // worldId
+            .WriteString(worldId.ToString()) // worldId
             .WriteByte() // worldState
             .WriteString("Event Message") // eventMsg
             .WriteUShort(1) // expRate
@@ -30,9 +32,9 @@ public sealed class WorldInfoRequestPacketHandler : IAsyncPacketHandler
         for (byte i = 0; i < 20;) // foreach channel
         {
             responseBuffer
-                .WriteString($"1-{++i}") // channel name [WorldId-ChannelIndex+1]
+                .WriteString($"{worldId}-{++i}") // channel name [WorldId-ChannelIndex+1]
                 .WriteInt() // connected peers count
-                .WriteByte(1) // world id
+                .WriteByte(worldId) // world id
                 .WriteByte(i) // channel index
                 .WriteBool(); // is adult channel
         }

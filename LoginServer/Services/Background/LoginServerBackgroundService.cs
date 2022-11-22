@@ -1,9 +1,6 @@
-﻿using System.Net;
-using Common.Enums;
+﻿using Common.Enums;
 using Common.Networking;
 using Common.Networking.Configuration;
-using Common.Networking.Packets.Interfaces;
-using LoginServer.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace LoginServer.Services.Background;

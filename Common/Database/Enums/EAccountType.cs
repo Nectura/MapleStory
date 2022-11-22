@@ -1,7 +1,7 @@
 ﻿namespace Common.Database.Enums;
 
-public enum EAccountType
+public enum EAccountType : byte
 {
     Normal,
-    GameMaster
+    GameMaster = 0x80
 }

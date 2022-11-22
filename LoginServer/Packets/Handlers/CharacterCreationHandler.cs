@@ -28,7 +28,7 @@ public sealed class CharacterCreationHandler : IAsyncPacketHandler
         }
         var character = new Character
         {
-            AccountId = client.Account!.Id,
+            AccountId = client.Account.Id,
             Name = packetInstance.Name,
             Face = packetInstance.Face,
             HairStyle = packetInstance.HairStyle,

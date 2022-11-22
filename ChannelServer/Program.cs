@@ -1,3 +1,6 @@
+using ChannelServer.Configuration;
+using ChannelServer.Packets.Handlers;
+using ChannelServer.Services.Background;
 using Common.Database;
 using Common.Database.Repositories;
 using Common.Database.Repositories.Interfaces;
@@ -7,11 +10,6 @@ using Common.Networking;
 using Common.Networking.Configuration;
 using Common.Networking.Packets;
 using Common.Networking.Packets.Interfaces;
-using Common.Services;
-using Common.Services.Interfaces;
-using LoginServer.Configuration;
-using LoginServer.Packets.Handlers;
-using LoginServer.Services.Background;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -33,16 +31,8 @@ builder.Services.AddLogging(loggingBuilder =>
 
 var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
 
-builder.Services.AddSingleton<IAsyncPacketHandler, ClientValidationPacketHandler>();
-builder.Services.AddSingleton<IAsyncPacketHandler, ClientStartPacketHandler>();
-builder.Services.AddSingleton<IAsyncPacketHandler, ClientLoginPacketHandler>();
-builder.Services.AddSingleton<IAsyncPacketHandler, CheckUserLimitPacketHandler>();
-builder.Services.AddSingleton<IAsyncPacketHandler, WorldInfoRequestPacketHandler>();
-builder.Services.AddSingleton<IAsyncPacketHandler, SelectWorldPacketHandler>();
-builder.Services.AddSingleton<IAsyncPacketHandler, CharacterNameCheckHandler>();
-builder.Services.AddSingleton<IAsyncPacketHandler, CharacterCreationHandler>();
-builder.Services.AddSingleton<IAsyncPacketHandler, CharacterDeletionHandler>();
-builder.Services.AddSingleton<IAsyncPacketHandler, SelectCharacterPacketHandler>();
+builder.Services.AddSingleton<IAsyncPacketHandler, PlayerMigrationPacketHandler>();
+builder.Services.AddSingleton<IAsyncPacketHandler, UserChatPacketHandler>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountRestrictionRepository, AccountRestrictionRepository>();
@@ -52,9 +42,8 @@ builder.Services.AddScoped<IAccountWorkUnit, AccountWorkUnit>();
 
 builder.Services.AddSingleton<GameServer>();
 builder.Services.AddSingleton<IPacketProcessor, PacketProcessor>();
-builder.Services.AddSingleton<IAuthService, Sha3AuthService>();
 
-builder.Services.AddHostedService<LoginServerBackgroundService>();
+builder.Services.AddHostedService<ChannelServerBackgroundService>();
 
 builder.Services.AddDbContext<EntityContext>(options =>
     options.UseMySql(dbConStr, ServerVersion.AutoDetect(dbConStr))
@@ -64,7 +53,7 @@ builder.Services.AddDbContext<EntityContext>(options =>
 
 builder.Services.AddOptions();
 builder.Services.Configure<ServerConfig>(builder.Configuration.GetSection("Server"));
-builder.Services.Configure<LoginConfig>(builder.Configuration.GetSection("Login"));
+builder.Services.Configure<ChannelConfig>(builder.Configuration.GetSection("Channel"));
 
 var app = builder.Build();
 

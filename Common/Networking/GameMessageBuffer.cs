@@ -121,14 +121,18 @@ public sealed class GameMessageBuffer
         _writer.Write(value);
         return this;
     }
-
-    public GameMessageBuffer WriteString(string value, int? minLength = default)
+    
+    public GameMessageBuffer WriteDateTime(DateTime dateTime)
     {
-        if (!minLength.HasValue)
-            WriteUShort((ushort)value.Length);
-        var lengthToAppend = minLength.HasValue ? Math.Min(value.Length, minLength.Value) : value.Length;
-        for (var i = 0; i < lengthToAppend; i++)
-            WriteByte((byte) (i < value.Length ? value[i] : 0));
+        _writer.Write(dateTime.ToFileTimeUtc());
+        return this;
+    }
+
+    public GameMessageBuffer WriteString(string value)
+    {
+        WriteUShort((ushort)value.Length);
+        foreach (char c in value)
+            WriteByte((byte)c);
         return this;
     }
     

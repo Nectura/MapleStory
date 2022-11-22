@@ -8,7 +8,7 @@ public enum EClientOperationCode : ushort
         CheckUserLimit = 0x5,
         WorldInfoRequest = 0x6,
         SelectCharacter = 0xB,
-        MigrateIn = 0xC,
+        PlayerMigration = 0xC,
         CheckDuplicatedID = 0xD,
         CreateNewCharacter = 0x11,
         DeleteCharacter = 0x14,

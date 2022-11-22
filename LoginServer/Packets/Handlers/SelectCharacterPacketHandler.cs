@@ -31,7 +31,7 @@ public sealed class SelectCharacterPacketHandler : IAsyncPacketHandler
             writerBuffer
                 .WriteByte((byte)ELoginResult.Success)
                 .WriteByte()
-                .WriteIpEndpoint(new IPEndPoint(IPAddress.Parse("GameServerAddressHere"), 7575))
+                .WriteIpEndpoint(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7575))
                 .WriteInt(character.Id)
                 .WriteByte()
                 .WriteInt();

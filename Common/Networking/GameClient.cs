@@ -21,9 +21,10 @@ public sealed class GameClient
 
     public IPAddress IpAddress => _socket.GetRemoteIpAddress();
     
-    public Account? Account { get; set; }
-    public EWorld? World { get; set; }
-    public byte? Channel { get; set; }
+    public Account Account { get; set; }
+    public Character Character { get; set; }
+    public EWorld World { get; set; }
+    public byte Channel { get; set; }
 
     public GameClient(Socket socket, ServerConfig serverConfig)
     {

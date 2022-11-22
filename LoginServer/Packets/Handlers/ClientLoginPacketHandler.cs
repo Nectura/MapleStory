@@ -1,4 +1,5 @@
-﻿using Common.Database.Models;
+﻿using Common.Database.Enums;
+using Common.Database.Models;
 using Common.Database.Models.Interfaces;
 using Common.Database.WorkUnits.Interfaces;
 using Common.Networking;
@@ -89,17 +90,17 @@ public sealed class ClientLoginPacketHandler : IAsyncPacketHandler
         client.Send(new GameMessageBuffer(EServerOperationCode.CheckPasswordResult)
             .WriteByte((byte)ELoginResult.Success)
             .WriteInt(account.Id)
-            .WriteByte()
-            .WriteByte()
-            .WriteUShort()
-            .WriteByte()
+            .WriteByte() // acc gender?
+            .WriteBool() // gm bool
+            .WriteUShort() // gm byte
+            .WriteByte() // country code
             .WriteString(account.UserName)
-            .WriteByte()
-            .WriteByte()
-            .WriteLong()
-            .WriteLong()
-            .WriteInt()
-            .WriteByte()
-            .WriteByte());
+            .WriteByte() // ?
+            .WriteByte() // isQUietBan
+            .WriteLong() // quietbantimestamp
+            .WriteLong() // creationTimeStamp
+            .WriteInt() // 1: remove select world u want to play in
+            .WriteByte() // pin bool
+            .WriteByte()); // pic byte
     }
 }

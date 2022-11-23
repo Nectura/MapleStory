@@ -1,4 +1,7 @@
-﻿using ChannelServer.Packets.Models;
+﻿using ChannelServer.Chat.Models;
+using ChannelServer.Chat.Models.Interfaces;
+using ChannelServer.Chat.Services.Interfaces;
+using ChannelServer.Packets.Models;
 using Common.Networking;
 using Common.Networking.Extensions;
 using Common.Networking.Packets.Enums;
@@ -11,7 +14,7 @@ public sealed class UserChatPacketHandler : IAsyncPacketHandler
 {
     public EClientOperationCode Opcode { get; init; } = EClientOperationCode.UserChat;
 
-    public Task HandlePacketAsync(IServiceScopeFactory scopeFactory, GameClient client, GameMessageBuffer buffer, CancellationToken cancellationToken = default)
+    public async Task HandlePacketAsync(IServiceScopeFactory scopeFactory, GameClient client, GameMessageBuffer buffer, CancellationToken cancellationToken = default)
     {
         var packetInstance = buffer.ParsePacketInstance<UserChatPacket>();
         if (packetInstance.Text.StartsWith('!'))
@@ -28,15 +31,16 @@ public sealed class UserChatPacketHandler : IAsyncPacketHandler
                     SendSetField(client, false);
                     break;
             }
-            return Task.CompletedTask;
+            return;
         }
-        client.Send(new GameMessageBuffer(EServerOperationCode.UserChat)
-            .WriteInt(client.Character.Id)
-            .WriteBool() // client.Account.AccountType == EAccountType.GameMaster [needs to match the SendLoginSuccessResult packet]
-            .WriteString(packetInstance.Text)
-            .WriteBool(packetInstance.BubbleOnly)
-        );
-        return Task.CompletedTask;
+        await using var scope = scopeFactory.CreateAsyncScope();
+        var chatService = scope.ServiceProvider.GetRequiredService<IChatService<IGeneralMessage>>();
+        chatService.HandleChatMessage(new GeneralChatMessage
+        {
+            SenderCharacterId = client.Character.Id,
+            MapId = client.Character.MapId,
+            Message = packetInstance.Text
+        });
     }
     
     private void SendSetField(GameClient client, bool connect)

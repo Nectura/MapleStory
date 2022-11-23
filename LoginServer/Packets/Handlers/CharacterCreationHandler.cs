@@ -43,7 +43,6 @@ public sealed class CharacterCreationHandler : IAsyncPacketHandler
 
     private static void SendSuccessPacket(GameClient client, Character character)
     {
-        Console.WriteLine(JsonConvert.SerializeObject(character));
         client.Send(new GameMessageBuffer(EServerOperationCode.CreateNewCharacterResult)
             .WriteByte((byte)ELoginResult.Success)
             .WriteCharacterInfo(character)

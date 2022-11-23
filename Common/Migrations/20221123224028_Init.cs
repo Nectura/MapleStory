@@ -20,8 +20,8 @@ namespace Common.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    IssuedByAccountId = table.Column<int>(type: "int", nullable: true),
+                    AccountId = table.Column<uint>(type: "int unsigned", nullable: false),
+                    IssuedByAccountId = table.Column<uint>(type: "int unsigned", nullable: true),
                     Reason = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -37,7 +37,7 @@ namespace Common.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<uint>(type: "int unsigned", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -48,11 +48,11 @@ namespace Common.Migrations
                     PicHash = table.Column<byte[]>(type: "longblob", nullable: false),
                     PicSaltHash = table.Column<byte[]>(type: "longblob", nullable: false),
                     HasAcceptedEula = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CharacterSlots = table.Column<int>(type: "int", nullable: false),
+                    CharacterSlots = table.Column<uint>(type: "int unsigned", nullable: false),
                     LastWorldId = table.Column<int>(type: "int", nullable: true),
                     LastKnownIpAddress = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    AccountType = table.Column<int>(type: "int", nullable: false),
+                    AccountType = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     LastLoggedInAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     RestrictionId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
@@ -73,34 +73,35 @@ namespace Common.Migrations
                 name: "Characters",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<uint>(type: "int unsigned", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    AccountId = table.Column<uint>(type: "int unsigned", nullable: false),
                     WorldId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Level = table.Column<byte>(type: "tinyint unsigned", nullable: false),
-                    Experience = table.Column<int>(type: "int", nullable: false),
-                    Job = table.Column<short>(type: "smallint", nullable: false),
-                    Fame = table.Column<short>(type: "smallint", nullable: false),
-                    GachaponExperience = table.Column<int>(type: "int", nullable: false),
-                    Strength = table.Column<short>(type: "smallint", nullable: false),
-                    Dexterity = table.Column<short>(type: "smallint", nullable: false),
-                    Luck = table.Column<short>(type: "smallint", nullable: false),
-                    Intelligence = table.Column<short>(type: "smallint", nullable: false),
-                    MaxHitPoints = table.Column<short>(type: "smallint", nullable: false),
-                    MaxManaPoints = table.Column<short>(type: "smallint", nullable: false),
-                    HitPoints = table.Column<short>(type: "smallint", nullable: false),
-                    ManaPoints = table.Column<short>(type: "smallint", nullable: false),
-                    Mesos = table.Column<int>(type: "int", nullable: false),
+                    Experience = table.Column<uint>(type: "int unsigned", nullable: false),
+                    Job = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    SubJob = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    Fame = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    GachaponExperience = table.Column<uint>(type: "int unsigned", nullable: false),
+                    Strength = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    Dexterity = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    Luck = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    Intelligence = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    MaxHitPoints = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    MaxManaPoints = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    HitPoints = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    ManaPoints = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    Mesos = table.Column<uint>(type: "int unsigned", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    HairStyle = table.Column<int>(type: "int", nullable: false),
-                    HairColor = table.Column<int>(type: "int", nullable: false),
-                    Skin = table.Column<byte>(type: "tinyint unsigned", nullable: false),
-                    Face = table.Column<int>(type: "int", nullable: false),
-                    AbilityPoints = table.Column<short>(type: "smallint", nullable: false),
-                    SkillPoints = table.Column<short>(type: "smallint", nullable: false),
-                    MapId = table.Column<int>(type: "int", nullable: false),
+                    HairStyle = table.Column<uint>(type: "int unsigned", nullable: false),
+                    HairColor = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    SkinColor = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    Face = table.Column<uint>(type: "int unsigned", nullable: false),
+                    AbilityPoints = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    SkillPoints = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    MapId = table.Column<uint>(type: "int unsigned", nullable: false),
                     SpawnPoint = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     BuddyLimit = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     EquipmentSlots = table.Column<byte>(type: "tinyint unsigned", nullable: false),
@@ -108,10 +109,10 @@ namespace Common.Migrations
                     SetupSlots = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     EtceteraSlots = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     CashSlots = table.Column<byte>(type: "tinyint unsigned", nullable: false),
-                    X = table.Column<short>(type: "smallint", nullable: false),
-                    Y = table.Column<short>(type: "smallint", nullable: false),
+                    X = table.Column<ushort>(type: "smallint unsigned", nullable: false),
+                    Y = table.Column<ushort>(type: "smallint unsigned", nullable: false),
                     Stance = table.Column<byte>(type: "tinyint unsigned", nullable: false),
-                    Foothold = table.Column<short>(type: "smallint", nullable: false),
+                    Foothold = table.Column<ushort>(type: "smallint unsigned", nullable: false),
                     ExperienceLocked = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     LevelLocked = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },

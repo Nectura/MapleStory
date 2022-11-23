@@ -5,10 +5,10 @@ namespace Common.Database.Models;
 
 public class Character : ICharacter
 {
-    public int Id { get; set; }
+    public uint Id { get; set; }
 
     [ForeignKey(nameof(Account))]
-    public int AccountId { get; set; }
+    public uint AccountId { get; set; }
     public virtual Account? Account { get; set; }
 
     public EWorld WorldId { get; set; }

@@ -89,7 +89,7 @@ public sealed class ClientLoginPacketHandler : IAsyncPacketHandler
         client.Account = account;
         client.Send(new GameMessageBuffer(EServerOperationCode.CheckPasswordResult)
             .WriteByte((byte)ELoginResult.Success)
-            .WriteInt(account.Id)
+            .WriteUInt(account.Id)
             .WriteByte() // acc gender?
             .WriteBool() // gm bool
             .WriteUShort() // gm byte

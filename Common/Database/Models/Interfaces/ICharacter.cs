@@ -4,8 +4,8 @@ namespace Common.Database.Models.Interfaces;
 
 public interface ICharacter
 {
-    int Id { get; set; }
-    int AccountId { get; set; }
+    uint Id { get; set; }
+    uint AccountId { get; set; }
     EWorld WorldId { get; set; }
     string Name { get; set; }
     byte Level { get; set; }

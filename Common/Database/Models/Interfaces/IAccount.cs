@@ -5,7 +5,7 @@ namespace Common.Database.Models.Interfaces;
 
 public interface IAccount
 {
-    int Id { get; set; }
+    uint Id { get; set; }
     string UserName { get; set; }
     byte[] PasswordHash { get; set; }
     byte[] PasswordSaltHash { get; set; }
@@ -13,7 +13,7 @@ public interface IAccount
     byte[] PinSaltHash { get; set; }
     byte[] PicHash { get; set; }
     byte[] PicSaltHash { get; set; }
-    int CharacterSlots { get; set; }
+    uint CharacterSlots { get; set; }
     EWorld? LastWorldId { get; set; }
     string? LastKnownIpAddress { get; set; }
     EAccountType AccountType { get; set; }

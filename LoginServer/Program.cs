@@ -3,7 +3,7 @@ using Common.Database.Repositories;
 using Common.Database.Repositories.Interfaces;
 using Common.Database.WorkUnits;
 using Common.Database.WorkUnits.Interfaces;
-using Common.Networking;
+using Common.Networking.Abstract;
 using Common.Networking.Configuration;
 using Common.Networking.Packets;
 using Common.Networking.Packets.Interfaces;
@@ -12,6 +12,7 @@ using Common.Services.Interfaces;
 using LoginServer.Configuration;
 using LoginServer.Packets.Handlers;
 using LoginServer.Services.Background;
+using LoginServer.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -50,7 +51,7 @@ builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
 
 builder.Services.AddScoped<IAccountWorkUnit, AccountWorkUnit>();
 
-builder.Services.AddSingleton<GameServer>();
+builder.Services.AddSingleton<ILoginServer, LoginServer.Services.LoginServer>();
 builder.Services.AddSingleton<IPacketProcessor, PacketProcessor>();
 builder.Services.AddSingleton<IAuthService, Sha3AuthService>();
 

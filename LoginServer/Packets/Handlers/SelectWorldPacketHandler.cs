@@ -42,7 +42,7 @@ public sealed class SelectWorldPacketHandler : IAsyncPacketHandler
                 buffer.WriteCharacterInfo(character);
         buffer.WriteByte((byte)picStatus) // pic 0 - register 1 - request 2 - disable
             .WriteByte()
-            .WriteInt(client.Account.CharacterSlots)
+            .WriteUInt(client.Account.CharacterSlots)
             .WriteInt() // buy character count
             .WriteLong();
         client.Send(buffer);

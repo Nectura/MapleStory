@@ -1,12 +1,16 @@
+using ChannelServer.Chat.Models.Interfaces;
+using ChannelServer.Chat.Services;
+using ChannelServer.Chat.Services.Interfaces;
 using ChannelServer.Configuration;
 using ChannelServer.Packets.Handlers;
 using ChannelServer.Services.Background;
+using ChannelServer.Services.Interfaces;
 using Common.Database;
 using Common.Database.Repositories;
 using Common.Database.Repositories.Interfaces;
 using Common.Database.WorkUnits;
 using Common.Database.WorkUnits.Interfaces;
-using Common.Networking;
+using Common.Networking.Abstract;
 using Common.Networking.Configuration;
 using Common.Networking.Packets;
 using Common.Networking.Packets.Interfaces;
@@ -40,8 +44,9 @@ builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
 
 builder.Services.AddScoped<IAccountWorkUnit, AccountWorkUnit>();
 
-builder.Services.AddSingleton<GameServer>();
+builder.Services.AddSingleton<IChannelServer, ChannelServer.Services.ChannelServer>();
 builder.Services.AddSingleton<IPacketProcessor, PacketProcessor>();
+builder.Services.AddScoped<IChatService<IGeneralMessage>, GeneralChatService>();
 
 builder.Services.AddHostedService<ChannelServerBackgroundService>();
 

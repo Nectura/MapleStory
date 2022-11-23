@@ -21,15 +21,15 @@ namespace Common.Migrations
 
             modelBuilder.Entity("Common.Database.Models.Account", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int unsigned");
 
-                    b.Property<int>("AccountType")
-                        .HasColumnType("int");
+                    b.Property<byte>("AccountType")
+                        .HasColumnType("tinyint unsigned");
 
-                    b.Property<int>("CharacterSlots")
-                        .HasColumnType("int");
+                    b.Property<uint>("CharacterSlots")
+                        .HasColumnType("int unsigned");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -91,8 +91,8 @@ namespace Common.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
+                    b.Property<uint>("AccountId")
+                        .HasColumnType("int unsigned");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -100,8 +100,8 @@ namespace Common.Migrations
                     b.Property<DateTime>("ExpirationTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("IssuedByAccountId")
-                        .HasColumnType("int");
+                    b.Property<uint?>("IssuedByAccountId")
+                        .HasColumnType("int unsigned");
 
                     b.Property<string>("Reason")
                         .HasColumnType("longtext");
@@ -113,15 +113,15 @@ namespace Common.Migrations
 
             modelBuilder.Entity("Common.Database.Models.Character", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int unsigned");
 
                     b.Property<ushort>("AbilityPoints")
                         .HasColumnType("smallint unsigned");
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
+                    b.Property<uint>("AccountId")
+                        .HasColumnType("int unsigned");
 
                     b.Property<byte>("BuddyLimit")
                         .HasColumnType("tinyint unsigned");

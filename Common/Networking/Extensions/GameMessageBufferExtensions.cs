@@ -54,7 +54,7 @@ public static class GameMessageBufferExtensions
     
     public static GameMessageBuffer WriteCharacterStats(this GameMessageBuffer buffer, Character character)
     {
-        buffer.WriteInt(character.Id);
+        buffer.WriteUInt(character.Id);
         buffer.WriteFixedString(character.Name, 13);
         buffer.WriteByte((byte)character.Gender);
         buffer.WriteByte(character.SkinColor);

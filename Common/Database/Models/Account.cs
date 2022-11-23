@@ -7,7 +7,7 @@ namespace Common.Database.Models;
 
 public class Account : IAccount
 {
-    public int Id { get; set; }
+    public uint Id { get; set; }
     public string UserName { get; set; } = string.Empty;
     public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
     public byte[] PasswordSaltHash { get; set; } = Array.Empty<byte>();
@@ -16,7 +16,7 @@ public class Account : IAccount
     public byte[] PicHash { get; set; } = Array.Empty<byte>();
     public byte[] PicSaltHash { get; set; } = Array.Empty<byte>();
     public bool HasAcceptedEula { get; set; } = false;
-    public int CharacterSlots { get; set; } = 5;
+    public uint CharacterSlots { get; set; } = 5;
     public EWorld? LastWorldId { get; set; }
     public string? LastKnownIpAddress { get; set; }
     public EAccountType AccountType { get; set; } = EAccountType.Normal;

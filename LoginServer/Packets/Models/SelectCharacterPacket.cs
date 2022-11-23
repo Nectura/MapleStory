@@ -7,5 +7,5 @@ namespace LoginServer.Packets.Models;
 [PacketHandler(EClientOperationCode.SelectCharacter)]
 public record SelectCharacterPacket : IPacketStructure
 {
-    [PacketProperty(0)] public int CharacterId { get; init; }
+    [PacketProperty(0)] public uint CharacterId { get; init; }
 }

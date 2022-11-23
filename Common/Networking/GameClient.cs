@@ -17,12 +17,14 @@ public sealed class GameClient
     private readonly ServerConfig _serverConfig;
     private readonly MapleIV _sendVector, _recvVector;
 
-    public event Action<GameClient, GameMessageBuffer>? OnMessage;
+    public event Action<GameClient, GameMessageBuffer>? OnMessageReceived;
+    public event Action<GameClient>? OnDisconnected;
 
     public IPAddress IpAddress => _socket.GetRemoteIpAddress();
-    
-    public Account Account { get; set; }
-    public Character Character { get; set; }
+    public EndPoint? EndPoint => _socket.RemoteEndPoint;
+
+    public Account Account { get; set; } = new();
+    public Character Character { get; set; } = new();
     public EWorld World { get; set; }
     public byte Channel { get; set; }
 
@@ -59,7 +61,7 @@ public sealed class GameClient
         Buffer.BlockCopy(_buffer, 4, _buffer, 0, _size);
         MapleAES.Transform(payload, _recvVector);
         Shanda.DecryptTransform(payload);
-        OnMessage?.Invoke(this, new GameMessageBuffer(payload));
+        OnMessageReceived?.Invoke(this, new GameMessageBuffer(payload));
 
         _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, out SocketError errorCode2, OnReceive, null);
     }
@@ -88,5 +90,6 @@ public sealed class GameClient
     public async Task DisconnectAsync(CancellationToken cancellationToken = default)
     {
         await _socket.DisconnectAsync(false, cancellationToken);
+        OnDisconnected?.Invoke(this);
     }
 }

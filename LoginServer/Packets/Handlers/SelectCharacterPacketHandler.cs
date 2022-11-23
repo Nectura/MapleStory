@@ -32,7 +32,7 @@ public sealed class SelectCharacterPacketHandler : IAsyncPacketHandler
                 .WriteByte((byte)ELoginResult.Success)
                 .WriteByte()
                 .WriteIpEndpoint(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7575))
-                .WriteInt(character.Id)
+                .WriteUInt(character.Id)
                 .WriteByte()
                 .WriteInt();
         }

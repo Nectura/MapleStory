@@ -7,10 +7,10 @@ public class AccountRestriction : IAccountRestriction
 {
     public Guid Id { get; set; }
 
-    public int AccountId { get; set; }
+    public uint AccountId { get; set; }
     public virtual Account? Account { get; set; }
 
-    public int? IssuedByAccountId { get; set; }
+    public uint? IssuedByAccountId { get; set; }
     public string? Reason { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime ExpirationTime { get; set; }

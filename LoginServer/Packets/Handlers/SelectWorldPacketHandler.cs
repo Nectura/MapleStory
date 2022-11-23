@@ -27,7 +27,7 @@ public sealed class SelectWorldPacketHandler : IAsyncPacketHandler
         if (!loginConfig.EnablePic)
             SendWorldSelect(client, EPicStatus.Disabled);
         else
-            SendWorldSelect(client, client.Account.HasPic ? EPicStatus.Requested : EPicStatus.NotRegistered);
+            SendWorldSelect(client, client.Account.HasPic ? EPicStatus.Requested : EPicStatus.Unregistered);
     }
     
     private void SendWorldSelect(GameClient client, EPicStatus picStatus)
@@ -50,7 +50,7 @@ public sealed class SelectWorldPacketHandler : IAsyncPacketHandler
 
     private enum EPicStatus : byte
     {
-        NotRegistered,
+        Unregistered,
         Requested,
         Disabled
     }

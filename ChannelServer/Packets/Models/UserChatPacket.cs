@@ -1,10 +1,8 @@
 ﻿using Common.Networking.Packets.Attributes;
-using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
 
 namespace ChannelServer.Packets.Models;
 
-[PacketHandler(EClientOperationCode.UserChat)]
 public record struct UserChatPacket : IPacketStructure
 {
     [PacketField(0)] public int Tick;

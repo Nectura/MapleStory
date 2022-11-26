@@ -1,10 +1,8 @@
 ﻿using Common.Networking.Packets.Attributes;
-using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
 
 namespace ChannelServer.Packets.Models;
 
-[PacketHandler(EClientOperationCode.UserTransferFieldRequest)]
 public record struct UserTransferFieldPacket : IPacketStructure
 {
     [PacketField(0)] public byte Portals;

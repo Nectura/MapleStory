@@ -6,7 +6,6 @@ using Common.Networking;
 using Common.Networking.Extensions;
 using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
-using Newtonsoft.Json;
 
 namespace ChannelServer.Packets.Handlers;
 

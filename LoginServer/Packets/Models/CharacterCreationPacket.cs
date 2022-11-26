@@ -1,10 +1,8 @@
 ﻿using Common.Networking.Packets.Attributes;
-using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
 
 namespace LoginServer.Packets.Models;
 
-[PacketHandler(EClientOperationCode.CreateNewCharacter)]
 public record struct CharacterCreationPacket : IPacketStructure
 {
     [PacketField(0)] public string Name;

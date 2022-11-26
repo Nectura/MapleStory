@@ -8,7 +8,6 @@ using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
 using LoginServer.Packets.Enums;
 using LoginServer.Packets.Models;
-using Newtonsoft.Json;
 
 namespace LoginServer.Packets.Handlers;
 

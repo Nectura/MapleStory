@@ -1,9 +1,4 @@
 ﻿using ChannelServer.Services.Interfaces;
-using Common.Enums;
-using Common.Networking;
-using Common.Networking.Abstract;
-using Common.Networking.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace ChannelServer.Services.Background;
 

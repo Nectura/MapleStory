@@ -1,4 +1,4 @@
-﻿namespace ChannelServer.Chat.Enum;
+﻿namespace ChannelServer.Systems.Chat.Enum;
 
 public enum EMqttChatTopic
 {

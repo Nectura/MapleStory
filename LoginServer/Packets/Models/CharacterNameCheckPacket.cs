@@ -5,7 +5,7 @@ using Common.Networking.Packets.Interfaces;
 namespace LoginServer.Packets.Models;
 
 [PacketHandler(EClientOperationCode.CheckDuplicatedID)]
-public record CharacterNameCheckPacket : IPacketStructure
+public record struct CharacterNameCheckPacket : IPacketStructure
 {
-    [PacketProperty(0)] public string Name { get; init; } = "";
+    [PacketField(0)] public string Name;
 }

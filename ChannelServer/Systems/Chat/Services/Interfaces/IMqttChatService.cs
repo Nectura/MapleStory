@@ -1,7 +1,7 @@
-﻿using ChannelServer.Chat.Enum;
-using ChannelServer.Chat.Models.Interfaces;
+﻿using ChannelServer.Systems.Chat.Enum;
+using ChannelServer.Systems.Chat.Models.Interfaces;
 
-namespace ChannelServer.Chat.Services.Interfaces;
+namespace ChannelServer.Systems.Chat.Services.Interfaces;
 
 public interface IMqttChatService<in T> : IChatService<T> where T : IChatMessage
 {

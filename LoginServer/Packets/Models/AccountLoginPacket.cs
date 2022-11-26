@@ -5,8 +5,8 @@ using Common.Networking.Packets.Interfaces;
 namespace LoginServer.Packets.Models;
 
 [PacketHandler(EClientOperationCode.ClientLogin)]
-public record AccountLoginPacket : IPacketStructure
+public record struct AccountLoginPacket : IPacketStructure
 {
-    [PacketProperty(0)] public string UserName { get; init; } = "";
-    [PacketProperty(1)] public string Password { get; init; } = "";
+    [PacketField(0)] public string UserName;
+    [PacketField(1)] public string Password;
 }

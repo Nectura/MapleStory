@@ -3,6 +3,7 @@ using Common.Database.Repositories;
 using Common.Database.Repositories.Interfaces;
 using Common.Database.WorkUnits;
 using Common.Database.WorkUnits.Interfaces;
+using Common.Middlewares;
 using Common.Networking.Abstract;
 using Common.Networking.Configuration;
 using Common.Networking.Packets;
@@ -68,5 +69,6 @@ builder.Services.Configure<ServerConfig>(builder.Configuration.GetSection("Serve
 builder.Services.Configure<LoginConfig>(builder.Configuration.GetSection("Login"));
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.Run();

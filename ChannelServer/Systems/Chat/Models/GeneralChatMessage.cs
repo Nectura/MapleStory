@@ -1,6 +1,6 @@
-﻿using ChannelServer.Chat.Models.Interfaces;
+﻿using ChannelServer.Systems.Chat.Models.Interfaces;
 
-namespace ChannelServer.Chat.Models;
+namespace ChannelServer.Systems.Chat.Models;
 
 public record struct GeneralChatMessage : IGeneralMessage
 {

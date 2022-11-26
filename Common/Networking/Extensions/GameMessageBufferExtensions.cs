@@ -7,37 +7,37 @@ namespace Common.Networking.Extensions;
 
 public static class GameMessageBufferExtensions
 {
-    private struct PacketProperty
+    private struct PacketField
     {
-        public PropertyInfo PropertyInfo { get; init; }
+        public FieldInfo MemberInfo { get; init; }
         public int? ReadLength { get; init; }
     }
     
-    public static T ParsePacketInstance<T>(this GameMessageBuffer buffer) where T : class
+    public static T ParsePacketInstance<T>(this GameMessageBuffer buffer) where T : struct
     {
         var packetInstance = Activator.CreateInstance<T>();
-        var dict = new SortedDictionary<uint, PacketProperty>();
+        var dict = new SortedDictionary<uint, PacketField>();
         
         // get the order of each property and append them in a sorted manner to a dictionary
-        foreach (var property in packetInstance.GetType().GetProperties())
+        foreach (var member in packetInstance.GetType().GetFields())
         {
-            var packetOrderAttr = property.GetCustomAttribute<PacketPropertyAttribute>();
+            var packetOrderAttr = member.GetCustomAttribute<PacketFieldAttribute>();
             
             if (packetOrderAttr == default) 
                 continue;
             
-            dict.Add(packetOrderAttr.Order, new PacketProperty
+            dict.Add(packetOrderAttr.Order, new PacketField
             {
-                PropertyInfo = property,
+                MemberInfo = member,
                 ReadLength = packetOrderAttr.HasReadLength ? packetOrderAttr.ReadLength : default
             });
         }
 
         // iterate over the properties in the dictionary and try to read them with our GameMessageBuffer
-        foreach (var packetProperty in dict.Values)
+        foreach (var packetMember in dict.Values)
         {
-            if (!buffer.TryRead(packetProperty.PropertyInfo.PropertyType, packetProperty.ReadLength, out var val)) continue;
-            packetProperty.PropertyInfo.SetValue(packetInstance, val);
+            if (!buffer.TryRead(packetMember.MemberInfo.FieldType, packetMember.ReadLength, out var val)) continue;
+            packetMember.MemberInfo.SetValueDirect(__makeref(packetInstance), val!);
         }
 
         return packetInstance;

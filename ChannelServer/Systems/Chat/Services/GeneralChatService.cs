@@ -1,11 +1,10 @@
-﻿using ChannelServer.Chat.Models.Interfaces;
-using ChannelServer.Chat.Services.Interfaces;
-using ChannelServer.Services.Interfaces;
+﻿using ChannelServer.Services.Interfaces;
+using ChannelServer.Systems.Chat.Models.Interfaces;
+using ChannelServer.Systems.Chat.Services.Interfaces;
 using Common.Networking;
-using Common.Networking.Abstract;
 using Common.Networking.Packets.Enums;
 
-namespace ChannelServer.Chat.Services;
+namespace ChannelServer.Systems.Chat.Services;
 
 public sealed class GeneralChatService : IChatService<IGeneralMessage>
 {

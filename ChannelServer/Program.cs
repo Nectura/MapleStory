@@ -1,15 +1,16 @@
-using ChannelServer.Chat.Models.Interfaces;
-using ChannelServer.Chat.Services;
-using ChannelServer.Chat.Services.Interfaces;
 using ChannelServer.Configuration;
 using ChannelServer.Packets.Handlers;
 using ChannelServer.Services.Background;
 using ChannelServer.Services.Interfaces;
+using ChannelServer.Systems.Chat.Models.Interfaces;
+using ChannelServer.Systems.Chat.Services;
+using ChannelServer.Systems.Chat.Services.Interfaces;
 using Common.Database;
 using Common.Database.Repositories;
 using Common.Database.Repositories.Interfaces;
 using Common.Database.WorkUnits;
 using Common.Database.WorkUnits.Interfaces;
+using Common.Middlewares;
 using Common.Networking.Abstract;
 using Common.Networking.Configuration;
 using Common.Networking.Packets;
@@ -61,5 +62,6 @@ builder.Services.Configure<ServerConfig>(builder.Configuration.GetSection("Serve
 builder.Services.Configure<ChannelConfig>(builder.Configuration.GetSection("Channel"));
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.Run();

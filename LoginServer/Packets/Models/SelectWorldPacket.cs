@@ -6,8 +6,8 @@ using Common.Networking.Packets.Interfaces;
 namespace LoginServer.Packets.Models;
 
 [PacketHandler(EClientOperationCode.SelectWorld)]
-public record SelectWorldPacket : IPacketStructure
+public record struct SelectWorldPacket : IPacketStructure
 {
-    [PacketProperty(0)] public EWorld WorldId { get; init; }
-    [PacketProperty(1)] public byte ChannelId { get; init; }
+    [PacketField(0)] public EWorld WorldId;
+    [PacketField(1)] public byte ChannelId;
 }

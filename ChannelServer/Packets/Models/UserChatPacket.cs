@@ -5,9 +5,9 @@ using Common.Networking.Packets.Interfaces;
 namespace ChannelServer.Packets.Models;
 
 [PacketHandler(EClientOperationCode.UserChat)]
-public record UserChatPacket : IPacketStructure
+public record struct UserChatPacket : IPacketStructure
 {
-    [PacketProperty(0)] public int Tick { get; init; }
-    [PacketProperty(1)] public string Text { get; init; } = "";
-    [PacketProperty(2)] public bool BubbleOnly { get; init; }
+    [PacketField(0)] public int Tick;
+    [PacketField(1)] public string Text;
+    [PacketField(2)] public bool BubbleOnly;
 }

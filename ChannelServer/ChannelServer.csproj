@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <Folder Include="Packets\Enums" />
+      <Folder Include="Systems\Inventory" />
     </ItemGroup>
 
 </Project>

@@ -5,6 +5,8 @@ using Common.Enums;
 
 namespace Common.Database.Models;
 
+
+
 public class Account : IAccount
 {
     public uint Id { get; set; }

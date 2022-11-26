@@ -5,9 +5,9 @@ using Common.Networking.Packets.Interfaces;
 namespace LoginServer.Packets.Models;
 
 [PacketHandler(EClientOperationCode.DeleteCharacter)]
-public record CharacterDeletionPacket : IPacketStructure
+public record struct CharacterDeletionPacket : IPacketStructure
 {
-    [PacketProperty(0)] public byte Unknown { get; init; }
-    [PacketProperty(1)] public string Birthday { get; init; } = "";
-    [PacketProperty(2)] public int CharacterId { get; init; }
+    [PacketField(0)] public byte Unknown;
+    [PacketField(1)] public string Birthday;
+    [PacketField(2)] public int CharacterId;
 }

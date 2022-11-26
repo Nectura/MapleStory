@@ -5,7 +5,7 @@ using Common.Networking.Packets.Interfaces;
 namespace ChannelServer.Packets.Models;
 
 [PacketHandler(EClientOperationCode.PlayerMigration)]
-public record PlayerMigrationPacket : IPacketStructure
+public record struct PlayerMigrationPacket : IPacketStructure
 {
-    [PacketProperty(0)] public int CharacterId { get; init; }
+    [PacketField(0)] public int CharacterId;
 }

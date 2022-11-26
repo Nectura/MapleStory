@@ -1,4 +1,4 @@
-﻿namespace ChannelServer.Chat.Models.Interfaces;
+﻿namespace ChannelServer.Systems.Chat.Models.Interfaces;
 
 public interface IChatMessage
 {

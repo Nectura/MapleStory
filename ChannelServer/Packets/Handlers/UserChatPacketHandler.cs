@@ -1,7 +1,7 @@
-﻿using ChannelServer.Chat.Models;
-using ChannelServer.Chat.Models.Interfaces;
-using ChannelServer.Chat.Services.Interfaces;
-using ChannelServer.Packets.Models;
+﻿using ChannelServer.Packets.Models;
+using ChannelServer.Systems.Chat.Models;
+using ChannelServer.Systems.Chat.Models.Interfaces;
+using ChannelServer.Systems.Chat.Services.Interfaces;
 using Common.Networking;
 using Common.Networking.Extensions;
 using Common.Networking.Packets.Enums;

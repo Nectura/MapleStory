@@ -1,7 +1,7 @@
 ﻿namespace Common.Networking.Packets.Attributes;
 
-[AttributeUsage(AttributeTargets.Property)]
-public sealed class PacketPropertyAttribute : Attribute
+[AttributeUsage(AttributeTargets.Field)]
+public sealed class PacketFieldAttribute : Attribute
 {
     private const int ReadLengthDefaultValue = -1;
     
@@ -10,7 +10,7 @@ public sealed class PacketPropertyAttribute : Attribute
     
     public bool HasReadLength => ReadLength != ReadLengthDefaultValue;
 
-    public PacketPropertyAttribute(uint order, int readLength = ReadLengthDefaultValue)
+    public PacketFieldAttribute(uint order, int readLength = ReadLengthDefaultValue)
     {
         Order = order;
         ReadLength = readLength;

@@ -25,6 +25,14 @@ public sealed class CharacterCreationHandler : IAsyncPacketHandler
             SendFailurePacket(client);
             return;
         }
+        var inventory = new Inventory
+        {
+            EquippableTabSlots = 24,
+            ConsumableTabSlots = 24,
+            SetupTabSlots = 24,
+            EtceteraTabSlots = 24,
+            CashTabSlots = 96 // cash is maxed out cause they are sellouts, 96 being the highest amount of slots
+        };
         var character = new Character
         {
             AccountId = client.Account.Id,
@@ -32,7 +40,8 @@ public sealed class CharacterCreationHandler : IAsyncPacketHandler
             Face = packetInstance.Face,
             HairStyle = packetInstance.HairStyle,
             HairColor = (byte) packetInstance.HairColor,
-            SkinColor = (byte) packetInstance.SkinColor
+            SkinColor = (byte) packetInstance.SkinColor,
+            Inventory = inventory
         };
         ApplyStartingConfiguration(character, packetInstance);
         repository.Add(character);
@@ -101,13 +110,6 @@ public sealed class CharacterCreationHandler : IAsyncPacketHandler
         character.Luck = 4;
 
         character.BuddyLimit = 20;
-
-        character.EquipmentSlots = 24;
-        character.UsableSlots = 24;
-        character.SetupSlots = 24;
-        character.EtceteraSlots = 24;
-        character.CashSlots = 96; // cash is maxed out cause they are sellouts, 96 being the highest amount of slots
-
         character.Level = 1;
     }
 }

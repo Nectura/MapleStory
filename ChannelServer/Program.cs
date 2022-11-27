@@ -1,11 +1,13 @@
 using ChannelServer.Configuration;
 using ChannelServer.Packets.Handlers;
+using ChannelServer.Packets.Models;
 using ChannelServer.Services.Background;
 using ChannelServer.Services.Interfaces;
 using ChannelServer.Systems.Chat.Models.Interfaces;
 using ChannelServer.Systems.Chat.Services;
 using ChannelServer.Systems.Chat.Services.Interfaces;
 using Common.Database;
+using Common.Database.Interfaces;
 using Common.Database.Repositories;
 using Common.Database.Repositories.Interfaces;
 using Common.Database.WorkUnits;
@@ -50,7 +52,7 @@ builder.Services.AddScoped<IChatService<IGeneralMessage>, GeneralChatService>();
 
 builder.Services.AddHostedService<ChannelServerBackgroundService>();
 
-builder.Services.AddDbContext<EntityContext>(options =>
+builder.Services.AddDbContext<IEntityContext, EntityContext>(options =>
     options.UseMySql(dbConStr, ServerVersion.AutoDetect(dbConStr))
         .LogTo(Console.WriteLine, LogLevel.Warning)
         //.EnableSensitiveDataLogging()

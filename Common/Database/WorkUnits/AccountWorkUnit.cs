@@ -2,6 +2,7 @@
 using Common.Database.Repositories.Interfaces;
 using Common.Database.WorkUnits.Abstract;
 using Common.Database.WorkUnits.Interfaces;
+using Common.InventoryX.Interfaces;
 
 namespace Common.Database.WorkUnits;
 

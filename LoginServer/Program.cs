@@ -1,4 +1,5 @@
 using Common.Database;
+using Common.Database.Interfaces;
 using Common.Database.Repositories;
 using Common.Database.Repositories.Interfaces;
 using Common.Database.WorkUnits;
@@ -57,7 +58,7 @@ builder.Services.AddSingleton<IAuthService, Sha3AuthService>();
 
 builder.Services.AddHostedService<LoginServerBackgroundService>();
 
-builder.Services.AddDbContext<EntityContext>(options =>
+builder.Services.AddDbContext<IEntityContext, EntityContext>(options =>
     options.UseMySql(dbConStr, ServerVersion.AutoDetect(dbConStr))
         .LogTo(Console.WriteLine, LogLevel.Warning)
         //.EnableSensitiveDataLogging()

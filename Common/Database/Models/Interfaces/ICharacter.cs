@@ -33,15 +33,11 @@ public interface ICharacter
     uint MapId { get; set; }
     byte SpawnPoint { get; set; }
     byte BuddyLimit { get; set; }
-    byte EquipmentSlots { get; set; }
-    byte UsableSlots { get; set; }
-    byte SetupSlots { get; set; }
-    byte EtceteraSlots { get; set; }
-    byte CashSlots { get; set; }
     ushort X { get; set; }
     ushort Y { get; set; }
     byte Stance { get; set; }
     ushort Foothold { get; set; }
     bool ExperienceLocked { get; set; }
     bool LevelLocked { get; set; }
+    Guid InventoryId { get; set; }
 }

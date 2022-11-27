@@ -122,20 +122,23 @@ public static class GameMessageBufferExtensions
             buffer.WriteUInt(client.Character.Mesos);
         if (dataType.HasFlag(ECharacterDataType.InventorySize))
         {
+            if (client.Character.Inventory == null)
+                throw new NullReferenceException("Expected the character's inventory to be already loaded at this point!");
+            
             if (dataType.HasFlag(ECharacterDataType.ItemSlotEquip))
-                buffer.WriteByte(client.Character.EquipmentSlots);
+                buffer.WriteByte(client.Character.Inventory.EquippableTabSlots);
             
             if (dataType.HasFlag(ECharacterDataType.ItemSlotConsume))
-                buffer.WriteByte(client.Character.UsableSlots);
+                buffer.WriteByte(client.Character.Inventory.ConsumableTabSlots);
             
             if (dataType.HasFlag(ECharacterDataType.ItemSlotInstall))
-                buffer.WriteByte(client.Character.SetupSlots);
+                buffer.WriteByte(client.Character.Inventory.SetupTabSlots);
             
             if (dataType.HasFlag(ECharacterDataType.ItemSlotEtc))
-                buffer.WriteByte(client.Character.EtceteraSlots);
+                buffer.WriteByte(client.Character.Inventory.EtceteraTabSlots);
             
             if (dataType.HasFlag(ECharacterDataType.ItemSlotCash))
-                buffer.WriteByte(client.Character.CashSlots);
+                buffer.WriteByte(client.Character.Inventory.CashTabSlots);
         }
         if (dataType.HasFlag(ECharacterDataType.AdminShopCount))
         {

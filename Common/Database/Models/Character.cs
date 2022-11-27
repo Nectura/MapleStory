@@ -10,6 +10,10 @@ public class Character : ICharacter
     [ForeignKey(nameof(Account))]
     public uint AccountId { get; set; }
     public virtual Account? Account { get; set; }
+    
+    [ForeignKey(nameof(Inventory))]
+    public Guid InventoryId { get; set; }
+    public virtual Inventory? Inventory { get; set; }
 
     public EWorld WorldId { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -38,11 +42,6 @@ public class Character : ICharacter
     public uint MapId { get; set; }
     public byte SpawnPoint { get; set; }
     public byte BuddyLimit { get; set; }
-    public byte EquipmentSlots { get; set; }
-    public byte UsableSlots { get; set; }
-    public byte SetupSlots { get; set; }
-    public byte EtceteraSlots { get; set; }
-    public byte CashSlots { get; set; }
     public ushort X { get; set; }
     public ushort Y { get; set; }
     public byte Stance { get; set; }

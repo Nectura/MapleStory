@@ -22,6 +22,7 @@ public sealed class PlayerMigrationPacketHandler : IAsyncPacketHandler
         var character = await repository
             .Query(m => m.Id == packetInstance.CharacterId)
             .Include(m => m.Account)
+            .Include(m => m.Inventory).ThenInclude(m => m!.TabItems)
             .FirstOrDefaultAsync(cancellationToken);
         if (character == default)
             throw new ArgumentException("Invalid character id");
@@ -57,7 +58,7 @@ public sealed class PlayerMigrationPacketHandler : IAsyncPacketHandler
         {
             buffer
                 .WriteByte()
-                .WriteUInt(client.Character.MapId)
+                .WriteUInt(client.Character!.MapId)
                 .WriteByte(client.Character.SpawnPoint)
                 .WriteUInt(client.Character.HitPoints)
                 .WriteBool(false);

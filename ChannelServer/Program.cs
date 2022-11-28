@@ -1,6 +1,5 @@
 using ChannelServer.Configuration;
 using ChannelServer.Packets.Handlers;
-using ChannelServer.Packets.Models;
 using ChannelServer.Services.Background;
 using ChannelServer.Services.Interfaces;
 using ChannelServer.Systems.Chat.Models.Interfaces;
@@ -12,10 +11,13 @@ using Common.Database.Repositories;
 using Common.Database.Repositories.Interfaces;
 using Common.Database.WorkUnits;
 using Common.Database.WorkUnits.Interfaces;
+using Common.Interfaces.Inventory;
 using Common.Middlewares;
 using Common.Networking.Configuration;
 using Common.Networking.Packets;
 using Common.Networking.Packets.Interfaces;
+using Common.Services;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -43,12 +45,16 @@ builder.Services.AddSingleton<IAsyncPacketHandler, UserChatPacketHandler>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountRestrictionRepository, AccountRestrictionRepository>();
 builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IInventoryTabItemRepository, InventoryTabItemRepository>();
 
 builder.Services.AddScoped<IAccountWorkUnit, AccountWorkUnit>();
+builder.Services.AddScoped<IInventoryWorkUnit, InventoryWorkUnit>();
 
 builder.Services.AddSingleton<IChannelServer, ChannelServer.Services.ChannelServer>();
 builder.Services.AddSingleton<IPacketProcessor, PacketProcessor>();
 builder.Services.AddScoped<IChatService<IGeneralMessage>, GeneralChatService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
 
 builder.Services.AddHostedService<ChannelServerBackgroundService>();
 

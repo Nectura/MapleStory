@@ -44,7 +44,7 @@ public sealed class ChannelServer : GameServer, IChannelServer
 
     protected override void HandleClientDisconnection(GameClient client)
     {
-        ConnectedPeers.Remove(client.Account.Id, out _);
+        ConnectedPeers.Remove(client.Account!.Id, out _);
         base.HandleClientDisconnection(client);
     }
 }

@@ -28,7 +28,7 @@ public sealed class UserTransferFieldPacketHandler : IAsyncPacketHandler
                 break;
             
             default: // admin '/m' command
-                if (!client.Account.IsAdmin)
+                if (!client.Account!.IsAdmin)
                 {
                     // Enable Actions
                     return;

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Common.Migrations
 {
     [DbContext(typeof(EntityContext))]
-    [Migration("20221123224028_Init")]
+    [Migration("20221128184026_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -129,17 +129,8 @@ namespace Common.Migrations
                     b.Property<byte>("BuddyLimit")
                         .HasColumnType("tinyint unsigned");
 
-                    b.Property<byte>("CashSlots")
-                        .HasColumnType("tinyint unsigned");
-
                     b.Property<ushort>("Dexterity")
                         .HasColumnType("smallint unsigned");
-
-                    b.Property<byte>("EquipmentSlots")
-                        .HasColumnType("tinyint unsigned");
-
-                    b.Property<byte>("EtceteraSlots")
-                        .HasColumnType("tinyint unsigned");
 
                     b.Property<uint>("Experience")
                         .HasColumnType("int unsigned");
@@ -174,6 +165,9 @@ namespace Common.Migrations
                     b.Property<ushort>("Intelligence")
                         .HasColumnType("smallint unsigned");
 
+                    b.Property<Guid>("InventoryId")
+                        .HasColumnType("char(36)");
+
                     b.Property<ushort>("Job")
                         .HasColumnType("smallint unsigned");
 
@@ -205,9 +199,6 @@ namespace Common.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<byte>("SetupSlots")
-                        .HasColumnType("tinyint unsigned");
-
                     b.Property<ushort>("SkillPoints")
                         .HasColumnType("smallint unsigned");
 
@@ -226,9 +217,6 @@ namespace Common.Migrations
                     b.Property<ushort>("SubJob")
                         .HasColumnType("smallint unsigned");
 
-                    b.Property<byte>("UsableSlots")
-                        .HasColumnType("tinyint unsigned");
-
                     b.Property<int>("WorldId")
                         .HasColumnType("int");
 
@@ -242,7 +230,127 @@ namespace Common.Migrations
 
                     b.HasIndex("AccountId");
 
+                    b.HasIndex("InventoryId")
+                        .IsUnique();
+
                     b.ToTable("Characters");
+                });
+
+            modelBuilder.Entity("Common.Database.Models.Inventory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<byte>("CashTabSlots")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<uint>("CharacterId")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<byte>("ConsumableTabSlots")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<byte>("EquippableTabSlots")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<byte>("EtceteraTabSlots")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<byte>("SetupTabSlots")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Inventories");
+                });
+
+            modelBuilder.Entity("Common.Database.Models.InventoryTabItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<ushort>("Accuracy")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("AttackPower")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("Avoidability")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<byte>("BonusUpgradeSlots")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<ushort>("Dexterity")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<DateTime?>("ExpirationTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<ushort>("HitPoints")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("Intelligence")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<Guid>("InventoryId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("InventoryTab")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsNxItem")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<ushort>("Jump")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("Luck")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("MagicalDefense")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("MagicalPower")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("ManaPoints")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<uint>("MapleId")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<string>("NameTag")
+                        .HasColumnType("longtext");
+
+                    b.Property<ushort>("PhysicalDefense")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("Quantity")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<byte>("Slot")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<ushort>("Speed")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("Strength")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("UpgradesApplied")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("UpgradesAvailable")
+                        .HasColumnType("smallint unsigned");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InventoryId");
+
+                    b.ToTable("InventoryTabItems");
                 });
 
             modelBuilder.Entity("Common.Database.Models.Account", b =>
@@ -263,7 +371,26 @@ namespace Common.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Common.Database.Models.Inventory", "Inventory")
+                        .WithOne("Character")
+                        .HasForeignKey("Common.Database.Models.Character", "InventoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Account");
+
+                    b.Navigation("Inventory");
+                });
+
+            modelBuilder.Entity("Common.Database.Models.InventoryTabItem", b =>
+                {
+                    b.HasOne("Common.Database.Models.Inventory", "Inventory")
+                        .WithMany("TabItems")
+                        .HasForeignKey("InventoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Inventory");
                 });
 
             modelBuilder.Entity("Common.Database.Models.Account", b =>
@@ -274,6 +401,13 @@ namespace Common.Migrations
             modelBuilder.Entity("Common.Database.Models.AccountRestriction", b =>
                 {
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("Common.Database.Models.Inventory", b =>
+                {
+                    b.Navigation("Character");
+
+                    b.Navigation("TabItems");
                 });
 #pragma warning restore 612, 618
         }

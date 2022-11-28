@@ -1,4 +1,6 @@
-﻿namespace Common.Database.Models;
+﻿using Common.Database.Models.Interfaces;
+
+namespace Common.Database.Models;
 
 public class Inventory : IInventory
 {
@@ -13,8 +15,5 @@ public class Inventory : IInventory
     public byte EtceteraTabSlots { get; set; }
     public byte CashTabSlots { get; set; }
     
-    public virtual ICollection<EquippableItem>? EquippableItems { get; set; }
-    public virtual ICollection<ConsumableItem>? ConsumableItems { get; set; }
-    public virtual ICollection<SetupItem>? SetupItems { get; set; }
-    public virtual ICollection<EtceteraItem>? EtceteraItems { get; set; }
+    public virtual ICollection<InventoryTabItem>? TabItems { get; set; }
 }

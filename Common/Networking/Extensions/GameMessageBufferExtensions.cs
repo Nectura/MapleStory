@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Common.Database.Models;
+using Common.Database.Models.Interfaces;
 using Common.Enums;
 using Common.Networking.Packets.Attributes;
 
@@ -43,7 +43,7 @@ public static class GameMessageBufferExtensions
         return packetInstance;
     } 
     
-    public static GameMessageBuffer WriteCharacterInfo(this GameMessageBuffer buffer, Character character)
+    public static GameMessageBuffer WriteCharacterInfo(this GameMessageBuffer buffer, ICharacter character)
     {
         buffer.WriteCharacterStats(character);
         buffer.WriteCharacterAppearance(character);
@@ -52,7 +52,7 @@ public static class GameMessageBufferExtensions
         return buffer;
     }
     
-    public static GameMessageBuffer WriteCharacterStats(this GameMessageBuffer buffer, Character character)
+    public static GameMessageBuffer WriteCharacterStats(this GameMessageBuffer buffer, ICharacter character)
     {
         buffer.WriteUInt(character.Id);
         buffer.WriteFixedString(character.Name, 13);
@@ -82,7 +82,7 @@ public static class GameMessageBufferExtensions
         return buffer;
     }
     
-    public static GameMessageBuffer WriteCharacterAppearance(this GameMessageBuffer buffer, Character character)
+    public static GameMessageBuffer WriteCharacterAppearance(this GameMessageBuffer buffer, ICharacter character)
     {
         buffer.WriteByte((byte)character.Gender);
         buffer.WriteByte(character.SkinColor);
@@ -93,11 +93,11 @@ public static class GameMessageBufferExtensions
         return buffer;
     }
     
-    public static GameMessageBuffer WriteCharacterEquipmentData(this GameMessageBuffer buffer, Character character)
+    public static GameMessageBuffer WriteCharacterEquipmentData(this GameMessageBuffer buffer, ICharacter character)
     {
         buffer.WriteSByte(-1);
         buffer.WriteSByte(-1);
-        buffer.WriteUInt(); //cash weapon
+        buffer.WriteUInt(); //cash weaponv
         for (var i = 0; i < 3; i++)
             buffer.WriteUInt(); // pets
         return buffer;
@@ -112,17 +112,17 @@ public static class GameMessageBufferExtensions
         if (dataType.HasFlag(ECharacterDataType.Character))
         {
             buffer
-                .WriteCharacterStats(client.Character)
-                .WriteByte(client.Character.BuddyLimit)
+                .WriteCharacterStats(client.Character!)
+                .WriteByte(client.Character!.BuddyLimit)
                 .WriteBool(false)
                 .WriteBool(false)
                 .WriteBool(false);
         }
         if (dataType.HasFlag(ECharacterDataType.Money))
-            buffer.WriteUInt(client.Character.Mesos);
+            buffer.WriteUInt(client.Character!.Mesos);
         if (dataType.HasFlag(ECharacterDataType.InventorySize))
         {
-            if (client.Character.Inventory == null)
+            if (client.Character!.Inventory == null)
                 throw new NullReferenceException("Expected the character's inventory to be already loaded at this point!");
             
             if (dataType.HasFlag(ECharacterDataType.ItemSlotEquip))
@@ -149,27 +149,101 @@ public static class GameMessageBufferExtensions
 
         if (dataType.HasFlag(ECharacterDataType.ItemSlotEquip))
         {
+            foreach (var item in client.Character!.Inventory!.TabItems!.Where(m => m.InventoryTab == EInventoryTab.Equipment))
+            {
+                buffer.WriteShort((short)(item.Slot % 100))
+                    .WriteByte((byte)EItemType.Bundle)
+                    .WriteUInt(item.MapleId)
+                    .WriteBool(item.IsNxItem);
+                if (item.IsNxItem)
+                    buffer.WriteULong(); // cash item SN
+                if (item.ExpirationTime.HasValue)
+                    buffer.WriteDateTime(item.ExpirationTime.Value);
+                else
+                    buffer.WriteULong();
+                buffer
+                    .WriteInt(-1) // bag id?
+                    .WriteUShort(item.Quantity)
+                    .WriteString(item.NameTag ?? string.Empty)
+                    .WriteUShort(); // attribute
+                // if its rechargable then writeULong(0)
+            }
             buffer
                 .WriteUShort()
                 .WriteUShort()
                 .WriteUShort()
                 .WriteUShort()
                 .WriteUShort();
+            buffer.WriteByte();
         }
         if (dataType.HasFlag(ECharacterDataType.ItemSlotConsume))
         {
-            buffer
-                .WriteByte();
+            foreach (var item in client.Character!.Inventory!.TabItems!.Where(m => m.InventoryTab == EInventoryTab.Consumables))
+            {
+                buffer.WriteByte(item.Slot)
+                    .WriteByte((byte)EItemType.Bundle)
+                    .WriteUInt(item.MapleId)
+                    .WriteBool(item.IsNxItem);
+                if (item.IsNxItem)
+                    buffer.WriteULong(); // cash item SN
+                if (item.ExpirationTime.HasValue)
+                    buffer.WriteDateTime(item.ExpirationTime.Value);
+                else
+                    buffer.WriteULong();
+                buffer
+                    .WriteInt(-1) // bag id?
+                    .WriteUShort(item.Quantity)
+                    .WriteString(item.NameTag ?? string.Empty)
+                    .WriteUShort(); // attribute
+                // if its rechargable then writeULong(0)
+            }
+            buffer.WriteByte();
         }
         if (dataType.HasFlag(ECharacterDataType.ItemSlotInstall))
         {
-            buffer
-                .WriteByte();
+            foreach (var item in client.Character!.Inventory!.TabItems!.Where(m => m.InventoryTab == EInventoryTab.Setup))
+            {
+                buffer.WriteByte(item.Slot)
+                    .WriteByte((byte)EItemType.Bundle)
+                    .WriteUInt(item.MapleId)
+                    .WriteBool(item.IsNxItem);
+                if (item.IsNxItem)
+                    buffer.WriteULong(); // cash item SN
+                if (item.ExpirationTime.HasValue)
+                    buffer.WriteDateTime(item.ExpirationTime.Value);
+                else
+                    buffer.WriteULong();
+                buffer
+                    .WriteInt(-1) // bag id?
+                    .WriteUShort(item.Quantity)
+                    .WriteString(item.NameTag ?? string.Empty)
+                    .WriteUShort(); // attribute
+                // if its rechargable then writeULong(0)
+            }
+            buffer.WriteByte();
         }
         if (dataType.HasFlag(ECharacterDataType.ItemSlotEtc))
         {
-            buffer
-                .WriteByte();
+            foreach (var item in client.Character!.Inventory!.TabItems!.Where(m => m.InventoryTab == EInventoryTab.Etcetera))
+            {
+                buffer.WriteByte(item.Slot)
+                    .WriteByte((byte)EItemType.Bundle)
+                    .WriteUInt(item.MapleId)
+                    .WriteBool(item.IsNxItem);
+                if (item.IsNxItem)
+                    buffer.WriteULong(); // cash item SN
+                if (item.ExpirationTime.HasValue)
+                    buffer.WriteDateTime(item.ExpirationTime.Value);
+                else
+                    buffer.WriteULong();
+                buffer
+                    .WriteInt(-1) // bag id?
+                    .WriteUShort(item.Quantity)
+                    .WriteString(item.NameTag ?? string.Empty)
+                    .WriteUShort(); // attribute
+                // if its rechargable then writeULong(0)
+            }
+            buffer.WriteByte();
         }
         if (dataType.HasFlag(ECharacterDataType.ItemSlotCash))
         {

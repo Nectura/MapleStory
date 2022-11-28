@@ -1,22 +1,24 @@
-﻿namespace Common.Database.WorkUnits.Abstract;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Common.Database.WorkUnits.Abstract;
 
 public abstract class UnitOfWork
 {
-    protected readonly EntityContext _entityContext;
+    protected readonly DbContext _dbContext;
 
-    protected UnitOfWork(EntityContext entityContext)
+    protected UnitOfWork(DbContext dbContext)
     {
-        _entityContext = entityContext;
+        _dbContext = dbContext;
     }
 
     public async ValueTask DisposeAsync()
     {
-        await _entityContext.DisposeAsync();
+        await _dbContext.DisposeAsync();
         GC.SuppressFinalize(this);
     }
 
     public async Task<int> CommitChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await _entityContext.SaveChangesAsync(cancellationToken);
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

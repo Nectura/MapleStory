@@ -1,4 +1,5 @@
 ﻿using Common.Database.Models;
+using Common.Database.Models.Interfaces;
 using Common.Database.WorkUnits.Interfaces;
 using Common.Networking;
 using Common.Networking.Extensions;
@@ -82,7 +83,7 @@ public sealed class ClientLoginPacketHandler : IAsyncPacketHandler
         SendLoginSuccessResult(client, account);
     }
 
-    private void SendLoginSuccessResult(GameClient client, Account account)
+    private void SendLoginSuccessResult(GameClient client, IAccount account)
     {
         client.Account = account;
         client.Send(new GameMessageBuffer(EServerOperationCode.CheckPasswordResult)

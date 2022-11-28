@@ -23,11 +23,11 @@ public sealed class GeneralChatService : IChatService<IGeneralMessage>
     private void BroadcastToMapPlayers(IGeneralMessage chatMessage)
     {
         var mapPeers = _channelServer.ConnectedPeers.Values
-            .Where(m => m.Character.MapId == chatMessage.MapId)
+            .Where(m => m.Character!.MapId == chatMessage.MapId)
             .ToList();
         foreach (var peer in mapPeers)
             peer.Send(new GameMessageBuffer(EServerOperationCode.UserChat)
-                .WriteUInt(peer.Character.Id)
+                .WriteUInt(peer.Character!.Id)
                 .WriteBool() // client.Account.AccountType == EAccountType.GameMaster [needs to match the SendLoginSuccessResult packet]
                 .WriteString(chatMessage.Message)
                 .WriteBool()

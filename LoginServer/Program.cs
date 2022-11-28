@@ -14,6 +14,7 @@ using LoginServer.Configuration;
 using LoginServer.Packets.Handlers;
 using LoginServer.Services.Background;
 using LoginServer.Services.Interfaces;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -49,6 +50,8 @@ builder.Services.AddSingleton<IAsyncPacketHandler, SelectCharacterPacketHandler>
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountRestrictionRepository, AccountRestrictionRepository>();
 builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IInventoryTabItemRepository, InventoryTabItemRepository>();
 
 builder.Services.AddScoped<IAccountWorkUnit, AccountWorkUnit>();
 

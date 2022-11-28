@@ -12,11 +12,8 @@ public sealed class EntityContext : DbContext, IEntityContext
     public DbSet<AccountRestriction> AccountRestrictions { get; set; }
     public DbSet<Character> Characters { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
-    public DbSet<EquippableItem> EquippableItems { get; set; }
-    public DbSet<ConsumableItem> ConsumableItems { get; set; }
-    public DbSet<SetupItem> SetupItems { get; set; }
-    public DbSet<EtceteraItem> EtceteraItems { get; set; }
-
+    public DbSet<InventoryTabItem> InventoryTabItems { get; set; }
+    
     public EntityContext(DbContextOptions<EntityContext> options) : base(options)
     {
     }
@@ -29,15 +26,9 @@ public sealed class EntityContext : DbContext, IEntityContext
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Account>().HasMany(m => m.Characters).WithOne(m => m.Account)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Character>().HasOne(m => m.Inventory).WithOne(m => m.Character)
+        modelBuilder.Entity<Character>().HasOne(m => m.Inventory).WithOne(m =>  m.Character)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Inventory>().HasMany(m => m.EquippableItems).WithOne(m => m.Inventory)
-            .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Inventory>().HasMany(m => m.ConsumableItems).WithOne(m => m.Inventory)
-            .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Inventory>().HasMany(m => m.SetupItems).WithOne(m => m.Inventory)
-            .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Inventory>().HasMany(m => m.EtceteraItems).WithOne(m => m.Inventory)
+        modelBuilder.Entity<Inventory>().HasMany(m => m.TabItems).WithOne(m => m.Inventory)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

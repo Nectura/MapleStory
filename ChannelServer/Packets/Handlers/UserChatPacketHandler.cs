@@ -25,7 +25,7 @@ public sealed class UserChatPacketHandler : IAsyncPacketHandler
                     //var mapId = uint.Parse(commandSegments[1]);
                     //var portal = byte.Parse(commandSegments[2]);
                     //Console.WriteLine($"Received Map Change Command: Map={mapId} , Portal={portal}");
-                    client.Character.MapId = 100000000;
+                    client.Character!.MapId = 100000000;
                     client.Character.SpawnPoint = 0;
                     SendSetField(client, false);
                     break;
@@ -36,7 +36,7 @@ public sealed class UserChatPacketHandler : IAsyncPacketHandler
         var chatService = scope.ServiceProvider.GetRequiredService<IChatService<IGeneralMessage>>();
         chatService.HandleChatMessage(new GeneralChatMessage
         {
-            SenderCharacterId = client.Character.Id,
+            SenderCharacterId = client.Character!.Id,
             MapId = client.Character.MapId,
             Message = packetInstance.Text
         });
@@ -64,7 +64,7 @@ public sealed class UserChatPacketHandler : IAsyncPacketHandler
         {
             buffer
                 .WriteByte()
-                .WriteUInt(client.Character.MapId)
+                .WriteUInt(client.Character!.MapId)
                 .WriteByte(client.Character.SpawnPoint)
                 .WriteUInt(client.Character.HitPoints)
                 .WriteBool(false);

@@ -2,6 +2,8 @@
 using Common.Database.Models.Interfaces;
 using Common.Database.Repositories.Interfaces;
 using Common.Enums;
+using Common.Interfaces.Inventory;
+using Common.Models.Structs;
 using Common.Networking;
 using Common.Networking.Extensions;
 using Common.Networking.Packets.Enums;
@@ -20,6 +22,7 @@ public sealed class CharacterCreationHandler : IAsyncPacketHandler
         await using var scope = scopeFactory.CreateAsyncScope();
         var packetInstance = buffer.ParsePacketInstance<CharacterCreationPacket>();
         var repository = scope.ServiceProvider.GetRequiredService<ICharacterRepository>();
+        var inventoryService = scope.ServiceProvider.GetRequiredService<IInventoryService>();
         if (await repository.AnyAsync(m => m.Name == packetInstance.Name, cancellationToken))
         {
             SendFailurePacket(client);
@@ -35,7 +38,7 @@ public sealed class CharacterCreationHandler : IAsyncPacketHandler
         };
         var character = new Character
         {
-            AccountId = client.Account.Id,
+            AccountId = client.Account!.Id,
             Name = packetInstance.Name,
             Face = packetInstance.Face,
             HairStyle = packetInstance.HairStyle,
@@ -43,7 +46,8 @@ public sealed class CharacterCreationHandler : IAsyncPacketHandler
             SkinColor = (byte) packetInstance.SkinColor,
             Inventory = inventory
         };
-        ApplyStartingConfiguration(character, packetInstance);
+        await inventoryService.LoadAsync(character.InventoryId, cancellationToken);
+        ApplyStartingConfiguration(character, packetInstance, inventoryService);
         repository.Add(character);
         await repository.SaveChangesAsync(cancellationToken);
         SendSuccessPacket(client, character);
@@ -64,31 +68,36 @@ public sealed class CharacterCreationHandler : IAsyncPacketHandler
         );
     }
     
-    private static void ApplyStartingConfiguration(ICharacter character, CharacterCreationPacket packetInstance)
+    private static void ApplyStartingConfiguration(ICharacter character, CharacterCreationPacket packetInstance, IInventoryService inventoryService)
     {
         if (!Enum.IsDefined(typeof(EJobCategory), packetInstance.JobCategory))
             throw new ArgumentException($"Unsupported Job Category: {packetInstance.JobCategory}"); // Note: potentially packet editing
 
         var jobCategory = (EJobCategory) packetInstance.JobCategory;
+
+        inventoryService.TryAddItem(packetInstance.Top, 1, EInventoryTab.Equipment, out _);
+        inventoryService.TryAddItem(packetInstance.Bottom, 1, EInventoryTab.Equipment, out _);
+        inventoryService.TryAddItem(packetInstance.Shoes, 1, EInventoryTab.Equipment, out _);
+        inventoryService.TryAddItem(packetInstance.Weapon, 1, EInventoryTab.Equipment, out _);
         
         switch (jobCategory)
         {
             case EJobCategory.CygnusKnights: // Knights of Cygnus
                 character.Job = EJob.Noblesse;
                 character.MapId = 130030000;
-                //inventoryItemDTOs.Add(new ItemDTO { MapleId = 4161047, Slot = 1, Quantity = 1, Type = EItemType.Etcetera });
+                inventoryService.TryAddItem(4161047, 1, EInventoryTab.Etcetera, out _);
                 break;
 
             case EJobCategory.Explorer: // Adventurer
                 character.Job = EJob.Beginner;
                 character.MapId = /*specialJobType == 2 ? 3000600 : */10000;
-                //inventoryItemDTOs.Add(new ItemDTO { MapleId = 4161001, Slot = 1, Quantity = 1, Type = EItemType.Etcetera });
+                inventoryService.TryAddItem(4161001, 1, EInventoryTab.Etcetera, out _);
                 break;
 
             case EJobCategory.Aran: // Aran
                 character.Job = EJob.Legend;
                 character.MapId = 914000000;
-                //inventoryItemDTOs.Add(new ItemDTO { MapleId = 4161048, Slot = 1, Quantity = 1, Type = EItemType.Etcetera });
+                inventoryService.TryAddItem(4161048, 1, EInventoryTab.Etcetera, out _);
                 break;
 
             case EJobCategory.Resistance:

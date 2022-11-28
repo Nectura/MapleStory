@@ -13,14 +13,18 @@ public interface IAccount
     byte[] PinSaltHash { get; set; }
     byte[] PicHash { get; set; }
     byte[] PicSaltHash { get; set; }
+    bool HasAcceptedEula { get; set; }
     uint CharacterSlots { get; set; }
     EWorld? LastWorldId { get; set; }
     string? LastKnownIpAddress { get; set; }
     EAccountType AccountType { get; set; }
     DateTime CreatedAt { get; set; }
+    DateTime LastLoggedInAt { get; set; }
     Guid? RestrictionId { get; set; }
+    AccountRestriction? Restriction { get; set; }
     bool IsAdmin { get; }
     bool IsRestricted { get; }
     bool HasPin { get; }
     bool HasPic { get; }
+    ICollection<Character>? Characters { get; set; }
 }

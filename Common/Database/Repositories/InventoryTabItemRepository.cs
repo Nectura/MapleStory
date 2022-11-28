@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Common.Database.Repositories;
 
-public sealed class AccountRepository : EntityRepository<Account>, IAccountRepository
+public sealed class InventoryTabItemRepository : EntityRepository<InventoryTabItem>, IInventoryTabItemRepository
 {
-    public AccountRepository(IEntityContext context) : base((DbContext)context)
+    public InventoryTabItemRepository(IEntityContext context) : base((DbContext)context)
     {
     }
 }

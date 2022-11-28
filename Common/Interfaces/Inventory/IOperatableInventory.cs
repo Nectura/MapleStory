@@ -1,9 +1,18 @@
-﻿using Common.InventoryX.Enums;
+﻿using Common.Database.Models.Interfaces;
+using Common.Enums;
 
-namespace Common.InventoryX.Interfaces;
+namespace Common.Interfaces.Inventory;
 
-public interface IOperatableInventory
+public interface IInventoryService
 {
+    /// <summary>
+    /// Loads the inventory
+    /// </summary>
+    /// <param name="inventoryId">The id of the inventory to load</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
+    /// <returns></returns>
+    Task LoadAsync(Guid inventoryId, CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Tries to get an inventory item
     /// </summary>
@@ -13,13 +22,7 @@ public interface IOperatableInventory
     /// <returns></returns>
     bool TryGetItem(EInventoryTab inventoryTab, byte slot, out IInventoryTabItem? inventoryTabItem);
     
-    /// <summary>
-    /// Tries to add an item to the inventory
-    /// </summary>
-    /// <param name="item">The item to add to the inventory</param>
-    /// <param name="inventoryTabItem">The updated item that was added to the inventory</param>
-    /// <returns>Whether the item has been successfully added to the inventory</returns>
-    bool TryAddItem(IItem item, out IInventoryTabItem? inventoryTabItem);
+    bool TryAddItem(uint itemId, ushort quantity, EInventoryTab inventoryTab, out IInventoryTabItem? inventoryTabItem);
     
     /// <summary>
     /// Tries to remove an item from the inventory

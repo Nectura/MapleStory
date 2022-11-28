@@ -1,4 +1,4 @@
-﻿namespace Common.InventoryX.Enums;
+﻿namespace Common.Enums;
 
 public enum EInventoryTab
 {

@@ -1,6 +1,4 @@
-﻿using Common.InventoryX.Enums;
-
-namespace Common.InventoryX.Interfaces;
+﻿namespace Common.Interfaces.Inventory;
 
 public interface IItem
 {

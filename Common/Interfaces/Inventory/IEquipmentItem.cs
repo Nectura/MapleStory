@@ -1,4 +1,4 @@
-﻿namespace Common.InventoryX.Interfaces;
+﻿namespace Common.Interfaces.Inventory;
 
 public interface IEquipmentItem : IItem
 {

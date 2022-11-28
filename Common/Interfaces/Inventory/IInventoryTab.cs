@@ -1,4 +1,6 @@
-﻿namespace Common.InventoryX.Interfaces;
+﻿using Common.Database.Models.Interfaces;
+
+namespace Common.Interfaces.Inventory;
 
 public interface IInventoryTab
 {

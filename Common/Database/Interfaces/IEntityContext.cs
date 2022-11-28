@@ -9,10 +9,7 @@ public interface IEntityContext
     DbSet<AccountRestriction> AccountRestrictions { get; set; }
     DbSet<Character> Characters { get; set; }
     DbSet<Inventory> Inventories { get; set; }
-    DbSet<EquippableItem> EquippableItems { get; set; }
-    DbSet<ConsumableItem> ConsumableItems { get; set; }
-    DbSet<SetupItem> SetupItems { get; set; }
-    DbSet<EtceteraItem> EtceteraItems { get; set; }
+    DbSet<InventoryTabItem> InventoryTabItems { get; set; }
     
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

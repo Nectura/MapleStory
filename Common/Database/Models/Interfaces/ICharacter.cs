@@ -5,7 +5,13 @@ namespace Common.Database.Models.Interfaces;
 public interface ICharacter
 {
     uint Id { get; set; }
+    
     uint AccountId { get; set; }
+    Account? Account { get; set; }
+    
+    Guid InventoryId { get; set; }
+    Inventory? Inventory { get; set; }
+    
     EWorld WorldId { get; set; }
     string Name { get; set; }
     byte Level { get; set; }
@@ -39,5 +45,4 @@ public interface ICharacter
     ushort Foothold { get; set; }
     bool ExperienceLocked { get; set; }
     bool LevelLocked { get; set; }
-    Guid InventoryId { get; set; }
 }

@@ -2,5 +2,7 @@
 
 public interface IStackableItem : IItem
 {
-    public ushort Quantity { get; set; }
+    ushort Attribute { get; set; }
+    ushort Quantity { get; set; }
+    bool IsRechargable();
 }

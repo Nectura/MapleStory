@@ -23,6 +23,7 @@ public sealed class SelectWorldPacketHandler : IAsyncPacketHandler
         var packetInstance = buffer.ParsePacketInstance<SelectWorldPacket>();
         client.World = packetInstance.WorldId;
         client.Channel = packetInstance.ChannelId;
+        await client.InitializeInventoryServicesAsync(cancellationToken);
         if (!loginConfig.EnablePic)
             SendWorldSelect(client, EPicStatus.Disabled);
         else
@@ -38,7 +39,7 @@ public sealed class SelectWorldPacketHandler : IAsyncPacketHandler
             .WriteByte((byte)(client.Account.Characters?.Count ?? 0));
         if (client.Account.Characters != default)
             foreach (var character in client.Account.Characters)
-                buffer.WriteCharacterInfo(character);
+                buffer.WriteCharacterInfo(character, client.InventoryServices[character.Id]);
         buffer.WriteByte((byte)picStatus) // pic 0 - register 1 - request 2 - disable
             .WriteByte()
             .WriteUInt(client.Account.CharacterSlots)

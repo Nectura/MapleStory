@@ -162,7 +162,7 @@ namespace Common.Migrations
                     b.Property<ushort>("Intelligence")
                         .HasColumnType("smallint unsigned");
 
-                    b.Property<Guid>("InventoryId")
+                    b.Property<Guid?>("InventoryId")
                         .HasColumnType("char(36)");
 
                     b.Property<ushort>("Job")
@@ -274,17 +274,38 @@ namespace Common.Migrations
                     b.Property<ushort>("AttackPower")
                         .HasColumnType("smallint unsigned");
 
+                    b.Property<ushort>("Attribute")
+                        .HasColumnType("smallint unsigned");
+
                     b.Property<ushort>("Avoidability")
                         .HasColumnType("smallint unsigned");
 
-                    b.Property<byte>("BonusUpgradeSlots")
-                        .HasColumnType("tinyint unsigned");
+                    b.Property<bool>("CanGrow")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<ushort>("Dexterity")
                         .HasColumnType("smallint unsigned");
 
+                    b.Property<uint>("Durability")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<byte>("Enchantments")
+                        .HasColumnType("tinyint unsigned");
+
                     b.Property<DateTime?>("ExpirationTime")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<ushort>("FirstPotential")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("FirstSocket")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<uint>("GrowthExperience")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<byte>("GrowthLevel")
+                        .HasColumnType("tinyint unsigned");
 
                     b.Property<ushort>("HitPoints")
                         .HasColumnType("smallint unsigned");
@@ -325,11 +346,20 @@ namespace Common.Migrations
                     b.Property<ushort>("PhysicalDefense")
                         .HasColumnType("smallint unsigned");
 
+                    b.Property<byte>("Potential")
+                        .HasColumnType("tinyint unsigned");
+
                     b.Property<ushort>("Quantity")
                         .HasColumnType("smallint unsigned");
 
-                    b.Property<byte>("Slot")
-                        .HasColumnType("tinyint unsigned");
+                    b.Property<ushort>("SecondPotential")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<ushort>("SecondSocket")
+                        .HasColumnType("smallint unsigned");
+
+                    b.Property<short>("Slot")
+                        .HasColumnType("smallint");
 
                     b.Property<ushort>("Speed")
                         .HasColumnType("smallint unsigned");
@@ -337,11 +367,17 @@ namespace Common.Migrations
                     b.Property<ushort>("Strength")
                         .HasColumnType("smallint unsigned");
 
-                    b.Property<ushort>("UpgradesApplied")
+                    b.Property<ushort>("ThirdPotential")
                         .HasColumnType("smallint unsigned");
 
-                    b.Property<ushort>("UpgradesAvailable")
-                        .HasColumnType("smallint unsigned");
+                    b.Property<byte>("UpgradesApplied")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<byte>("UpgradesAvailable")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<uint>("Vicious")
+                        .HasColumnType("int unsigned");
 
                     b.HasKey("Id");
 
@@ -371,8 +407,7 @@ namespace Common.Migrations
                     b.HasOne("Common.Database.Models.Inventory", "Inventory")
                         .WithOne("Character")
                         .HasForeignKey("Common.Database.Models.Character", "InventoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Account");
 

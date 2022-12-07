@@ -12,7 +12,7 @@ public class Character : ICharacter
     public virtual Account? Account { get; set; }
     
     [ForeignKey(nameof(Inventory))]
-    public Guid InventoryId { get; set; }
+    public Guid? InventoryId { get; set; }
     public virtual Inventory? Inventory { get; set; }
 
     public EWorld WorldId { get; set; }

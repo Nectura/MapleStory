@@ -13,8 +13,10 @@ public sealed class InventoryWorkUnit : UnitOfWork, IInventoryWorkUnit
     {
         Inventories = new InventoryRepository(entityContext);
         InventoryTabItems = new InventoryTabItemRepository(entityContext);
+        Characters = new CharacterRepository(entityContext);
     }
     
+    public ICharacterRepository Characters { get; }
     public IInventoryRepository Inventories { get; }
     public IInventoryTabItemRepository InventoryTabItems { get; }
 }

@@ -15,7 +15,8 @@ public sealed class ChannelServer : GameServer, IChannelServer
     public ChannelServer(
         IOptions<ServerConfig> serverConfig,
         IPacketProcessor packetProcessor,
-        ILogger<ChannelServer> logger) : base(serverConfig, packetProcessor, logger)
+        ILogger<ChannelServer> logger,
+        IServiceScopeFactory scopeFactory) : base(serverConfig, packetProcessor, logger, scopeFactory)
     {
     }
     
@@ -44,7 +45,7 @@ public sealed class ChannelServer : GameServer, IChannelServer
 
     protected override void HandleClientDisconnection(GameClient client)
     {
-        ConnectedPeers.Remove(client.Account!.Id, out _);
+        ConnectedPeers.Remove(client.Account.Id, out _);
         base.HandleClientDisconnection(client);
     }
 }

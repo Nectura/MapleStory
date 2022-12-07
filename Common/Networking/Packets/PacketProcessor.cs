@@ -32,21 +32,33 @@ public sealed class PacketProcessor : IPacketProcessor
 
         if (!Enum.IsDefined(typeof(EClientOperationCode), opcode))
         {
-            _logger.LogWarning($"Received an unknown packet: [{opcode}] {BitConverter.ToString(buffer.GetBytes()).Replace('-', ' ')}");
+            _logger.LogWarning("Received an unknown packet: [{opcode}] {packet}", opcode, BitConverter.ToString(buffer.GetBytes()).Replace('-', ' '));
             return;
         }
 
         var packetHandlerKey = (EClientOperationCode) opcode;
+        var opcodeName = Enum.GetName(typeof(EClientOperationCode), opcode);
+        var packet = BitConverter.ToString(buffer.GetBytes()).Replace('-', ' ');
         
         if (!_packetHandlers.ContainsKey(packetHandlerKey))
         {
-            _logger.LogWarning($"Failed to find a packet handler for {Enum.GetName(typeof(EClientOperationCode), opcode)}: {BitConverter.ToString(buffer.GetBytes()).Replace('-', ' ')}");
+            _logger.LogWarning("Failed to find a packet handler for {opcode}: {packet}", opcodeName, packet);
             return;
         }
         
         if (_serverConfig.LogAllPackets)
-            _logger.LogInformation($"Packet Received: [{Enum.GetName(typeof(EClientOperationCode), opcode)}]: {BitConverter.ToString(buffer.GetBytes()).Replace('-', ' ')}");
-        
-        Task.Run(async () => await _packetHandlers[packetHandlerKey].HandlePacketAsync(_scopeFactory, client, buffer));
+            _logger.LogInformation("Packet Received: [{opcode}]: {packet}", opcodeName, packet);
+
+        Task.Run(async () =>
+        {
+            try
+            {
+                await _packetHandlers[packetHandlerKey].HandlePacketAsync(_scopeFactory, client, buffer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to process packet {opcode}: {errorMsg}{newLine}{stackTrace}", opcodeName, ex.Message, Environment.NewLine, ex.StackTrace);
+            }
+        });
     }
 }

@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using Common.Networking.Abstract.Interfaces;
 using Common.Networking.Configuration;
 using Common.Networking.Packets.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -14,18 +15,21 @@ public abstract class GameServer : IAsyncDisposable, IGameServer
     
     protected readonly ServerConfig _serverConfig;
     protected readonly ILogger _logger;
-    
+
     private readonly IPacketProcessor _packetProcessor;
     private readonly TcpListener _listener;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     protected GameServer(
         IOptions<ServerConfig> serverConfig,
         IPacketProcessor packetProcessor,
-        ILogger logger)
+        ILogger logger,
+        IServiceScopeFactory scopeFactory)
     {
         _serverConfig = serverConfig.Value;
         _packetProcessor = packetProcessor;
         _logger = logger;
+        _scopeFactory = scopeFactory;
         _listener = new TcpListener(new IPEndPoint(IPAddress.Any, _serverConfig.ServerPort));
     }
 
@@ -63,7 +67,7 @@ public abstract class GameServer : IAsyncDisposable, IGameServer
         try
         {
             var socket = _listener.EndAcceptSocket(state);
-            var client = new GameClient(socket, _serverConfig);
+            var client = new GameClient(socket, _serverConfig, _scopeFactory);
             client.OnMessageReceived += HandleClientMessageReceived;
             client.OnDisconnected += HandleClientDisconnection;
             HandleClientConnection(client);

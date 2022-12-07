@@ -1,24 +1,36 @@
-﻿namespace Common.Interfaces.Inventory;
+﻿using Common.Enums;
+
+namespace Common.Interfaces.Inventory;
 
 public interface IEquippableItem : IItem
 {
-    public ushort Strength { get; set; }
-    public ushort Dexterity { get; set; }
-    public ushort Luck { get; set; }
-    public ushort Intelligence { get; set; }
-    public ushort AttackPower { get; set; }
-    public ushort MagicalPower { get; set; }
-    public ushort PhysicalDefense { get; set; }
-    public ushort MagicalDefense { get; set; }
-    public ushort HitPoints { get; set; }
-    public ushort ManaPoints { get; set; }
-    public ushort Speed { get; set; }
-    public ushort Jump { get; set; }
-    public ushort Accuracy { get; set; }
-    public ushort Avoidability { get; set; }
-    public ushort UpgradesAvailable { get; set; }
-    public ushort UpgradesApplied { get; set; }
-    public byte BonusUpgradeSlots { get; set; }
-    public string? NameTag { get; set; }
-    public DateTime? ExpirationTime { get; set; }
+    ushort Strength { get; set; }
+    ushort Dexterity { get; set; }
+    ushort Luck { get; set; }
+    ushort Intelligence { get; set; }
+    ushort AttackPower { get; set; }
+    ushort MagicalPower { get; set; }
+    ushort PhysicalDefense { get; set; }
+    ushort MagicalDefense { get; set; }
+    ushort HitPoints { get; set; }
+    ushort ManaPoints { get; set; }
+    ushort Speed { get; set; }
+    ushort Jump { get; set; }
+    ushort Accuracy { get; set; }
+    ushort Avoidability { get; set; }
+    byte UpgradesAvailable { get; set; }
+    byte UpgradesApplied { get; set; }
+    uint Vicious { get; set; } // wtf is this even
+    bool CanGrow { get; set; }
+    byte GrowthLevel { get; set; }
+    uint GrowthExperience { get; set; }
+    uint Durability { get; set; }
+    EItemPotential Potential { get; set; }
+    byte Enchantments { get; set; }
+    ushort FirstPotential { get; set; }
+    ushort SecondPotential { get; set; }
+    ushort ThirdPotential { get; set; }
+    ushort FirstSocket { get; set; }
+    ushort SecondSocket { get; set; }
+    DateTime? ExpirationTime { get; set; }
 }

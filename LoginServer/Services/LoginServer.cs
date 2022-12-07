@@ -15,7 +15,8 @@ public sealed class LoginServer : GameServer, ILoginServer
     public LoginServer(
         IOptions<ServerConfig> serverConfig,
         IPacketProcessor packetProcessor,
-        ILogger<LoginServer> logger) : base(serverConfig, packetProcessor, logger)
+        ILogger<LoginServer> logger,
+        IServiceScopeFactory scopeFactory) : base(serverConfig, packetProcessor, logger, scopeFactory)
     {
     }
     

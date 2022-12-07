@@ -19,7 +19,7 @@ public sealed class WorldInfoRequestPacketHandler : IAsyncPacketHandler
     
     private void SendWorldInfo(GameClient client)
     {
-        var worldId = (byte)EWorld.Kradia;
+        var worldId = (byte)EWorld.Demethos;
         var responseBuffer = new GameMessageBuffer(EServerOperationCode.WorldInformation);
         responseBuffer
             .WriteByte(worldId) // worldId

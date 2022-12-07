@@ -21,10 +21,8 @@ public interface IAccount
     DateTime CreatedAt { get; set; }
     DateTime LastLoggedInAt { get; set; }
     Guid? RestrictionId { get; set; }
-    AccountRestriction? Restriction { get; set; }
     bool IsAdmin { get; }
     bool IsRestricted { get; }
     bool HasPin { get; }
     bool HasPic { get; }
-    ICollection<Character>? Characters { get; set; }
 }

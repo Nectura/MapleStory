@@ -26,13 +26,14 @@ public sealed class PlayerMigrationPacketHandler : IAsyncPacketHandler
             .FirstOrDefaultAsync(cancellationToken);
         if (character == default)
             throw new ArgumentException("Invalid character id");
-        client.World = EWorld.Kradia;
+        client.World = EWorld.Demethos;
         client.Channel = 0; // channel index
         client.Character = character;
         client.Account = character.Account!;
         var channelServer = scope.ServiceProvider.GetRequiredService<IChannelServer>();
         channelServer.ConnectedPeers.Remove(client.Account.Id, out _);
         channelServer.ConnectedPeers.TryAdd(client.Account.Id, client);
+        await client.InitializeInventoryServicesAsync(cancellationToken);
         SendSetField(client, true);
     }
     
@@ -42,7 +43,7 @@ public sealed class PlayerMigrationPacketHandler : IAsyncPacketHandler
             .WriteUInt(client.Channel)
             .WriteUInt((uint)client.World)
             .WriteByte(1) // NotifierMessage
-            .WriteInt()
+            .WriteUInt()
             .WriteBool(connect)
             .WriteUShort(); // notifierCheck
         if (connect)
@@ -58,7 +59,7 @@ public sealed class PlayerMigrationPacketHandler : IAsyncPacketHandler
         {
             buffer
                 .WriteByte()
-                .WriteUInt(client.Character!.MapId)
+                .WriteUInt(client.Character.MapId)
                 .WriteByte(client.Character.SpawnPoint)
                 .WriteUInt(client.Character.HitPoints)
                 .WriteBool(false);

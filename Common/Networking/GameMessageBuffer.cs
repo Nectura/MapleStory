@@ -127,6 +127,12 @@ public sealed class GameMessageBuffer
         _writer.Write(dateTime.ToFileTimeUtc());
         return this;
     }
+    
+    public GameMessageBuffer WritePermanentDateTime()
+    {
+        _writer.Write(150842304000000000);
+        return this;
+    }
 
     public GameMessageBuffer WriteString(string value)
     {

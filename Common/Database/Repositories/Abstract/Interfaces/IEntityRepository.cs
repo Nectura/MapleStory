@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Common.Database.Repositories.Abstract.Interfaces;
 
@@ -13,5 +14,7 @@ public interface IEntityRepository<T> where T : class
     void AddRange(IEnumerable<T> entities);
     void Remove(T entity);
     void RemoveRange(IEnumerable<T> entities);
+    EntityEntry<T> Update(T entity);
+    void UpdateRange(IEnumerable<T> entities);
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

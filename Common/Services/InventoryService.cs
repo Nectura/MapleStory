@@ -1,21 +1,20 @@
 ﻿using Common.Database.Models;
 using Common.Database.Models.Interfaces;
-using Common.Database.Repositories.Interfaces;
+using Common.Database.WorkUnits.Interfaces;
 using Common.Enums;
 using Common.Interfaces.Inventory;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-// TODO: handle cash items
 namespace Common.Services;
 
 public sealed class InventoryService : IInventoryService
 {
-    public SortedDictionary<EInventoryTab, SortedDictionary<byte, IInventoryTabItem>> TabItems { get; init; } = new();
-    public Dictionary<EInventoryTab, byte> TabCapacity { get; init; } = new();
-
     private readonly IServiceScopeFactory _scopeFactory;
     private Guid? _inventoryId;
+    
+    public SortedDictionary<EInventoryTab, SortedDictionary<short, IInventoryTabItem>> TabItems { get; init; } = new();
+    public Dictionary<EInventoryTab, byte> TabCapacity { get; init; } = new();
 
     public InventoryService(IServiceScopeFactory scopeFactory)
     {
@@ -32,31 +31,40 @@ public sealed class InventoryService : IInventoryService
     {
         if (!_inventoryId.HasValue)
             throw new Exception("The inventory hasn't been loaded before use!");
-        
-        await using var scope = _scopeFactory.CreateAsyncScope();
-        var repository = scope.ServiceProvider.GetRequiredService<IInventoryTabItemRepository>();
-        var inventoryItems = await repository.Query(m => m.InventoryId == _inventoryId.Value).ToListAsync(cancellationToken);
 
-        foreach (var item in inventoryItems)
+        await using var scope = _scopeFactory.CreateAsyncScope();
+        var workUnit = scope.ServiceProvider.GetRequiredService<IInventoryWorkUnit>();
+        var existingTabItems = await workUnit.InventoryTabItems.Query(m => m.InventoryId == _inventoryId).ToListAsync(cancellationToken);
+        
+        foreach (var inventoryTab in TabItems.Keys)
         {
-            var itemSet = TabItems[item.InventoryTab];
-            if (itemSet.TryGetValue(item.Slot, out var updatedItem))
+            // update existing items
+            var updatedItems = TabItems[inventoryTab].Values.Where(m => m.Id != Guid.Empty).ToDictionary(m => m.Id, m => m);
+            foreach (var existingItem in existingTabItems.Where(m => updatedItems.ContainsKey(m.Id)))
             {
-                item.Slot = updatedItem.Slot;
-                item.Quantity = updatedItem.Quantity;
-                continue;
+                var updatedItem = updatedItems[existingItem.Id];
+                existingItem.UpdateFromReference(updatedItem);
             }
-            repository.Remove(item);
+            // delete non-existing items
+            workUnit.InventoryTabItems.RemoveRange(existingTabItems.Where(m => !updatedItems.ContainsKey(m.Id)));
+            // add new items
+            workUnit.InventoryTabItems.AddRange(TabItems[inventoryTab].Values.Where(m => m.Id == Guid.Empty).Select(m =>
+            {
+                var tabItem = new InventoryTabItem();
+                tabItem.UpdateFromReference(m);
+                return tabItem;
+            }));
         }
         
-        
-
-        await repository.SaveChangesAsync(cancellationToken);
+        await workUnit.CommitChangesAsync(cancellationToken);
     }
     
     public async Task LoadAsync(Guid inventoryId, CancellationToken cancellationToken = default)
     {
-        var inventory = await _inventoryRepository
+        await using var scope = _scopeFactory.CreateAsyncScope();
+        var workUnit = scope.ServiceProvider.GetRequiredService<IInventoryWorkUnit>();
+        
+        var inventory = await workUnit.Inventories
             .Query(m => m.Id == inventoryId)
             .Include(m => m.TabItems)
             .FirstOrDefaultAsync(cancellationToken);
@@ -64,10 +72,12 @@ public sealed class InventoryService : IInventoryService
         if (inventory == default)
             throw new ArgumentException($"Failed to find an inventory with id {inventoryId}");
 
+        _inventoryId = inventory.Id;
+        
         TabItems.Clear();
         
         foreach (var tab in Enum.GetValues<EInventoryTab>())
-            TabItems.Add(tab, new SortedDictionary<byte, IInventoryTabItem>());
+            TabItems.Add(tab, new SortedDictionary<short, IInventoryTabItem>());
         
         foreach (var item in inventory.TabItems!)
             TabItems[item.InventoryTab].Add(item.Slot, item);
@@ -80,7 +90,7 @@ public sealed class InventoryService : IInventoryService
         TabCapacity.Add(EInventoryTab.Cash, inventory.CashTabSlots);
     }
 
-    public bool TryGetItem(EInventoryTab inventoryTab, byte slot, out IInventoryTabItem? inventoryTabItem)
+    public bool TryGetItem(EInventoryTab inventoryTab, short slot, out IInventoryTabItem? inventoryTabItem)
     {
         AssertLoaded();
 
@@ -88,23 +98,27 @@ public sealed class InventoryService : IInventoryService
     }
 
     // TODO: handle item stacks
-    public bool TryAddItem(uint itemId, ushort quantity, EInventoryTab inventoryTab, out IInventoryTabItem? inventoryTabItem)
+    public bool TryAddItem(EInventoryTab inventoryTab, uint itemId, ushort quantity, out IInventoryTabItem? inventoryTabItem, short? slot = default)
     {
         AssertLoaded();
 
         // TODO: figure out the type of the item by the mapleId or packet
 
         var currentItemCount = (byte) TabItems[inventoryTab].Count;
+        var toSlot = slot ?? (short) (currentItemCount + 1);
 
         if (currentItemCount < TabCapacity[inventoryTab])
         {
             // TODO: create a new default or randomized instance of the item based on the WZ data
             inventoryTabItem = new InventoryTabItem
             {
+                InventoryId = _inventoryId!.Value,
                 MapleId = itemId,
-                Quantity = quantity
+                Quantity = quantity,
+                InventoryTab = inventoryTab,
+                Slot = toSlot
             };
-            TabItems[inventoryTab].Add(currentItemCount, inventoryTabItem);
+            TabItems[inventoryTab].Add(toSlot, inventoryTabItem);
             return true;
         }
 
@@ -114,7 +128,7 @@ public sealed class InventoryService : IInventoryService
     }
 
     // TODO: handle item stacks
-    public bool TryRemoveItem(EInventoryTab inventoryTab, byte slot, out IInventoryTabItem? inventoryTabItem)
+    public bool TryRemoveItem(EInventoryTab inventoryTab, short slot, out IInventoryTabItem? inventoryTabItem)
     {
         AssertLoaded();
 
@@ -126,11 +140,11 @@ public sealed class InventoryService : IInventoryService
     }
 
     // TODO: handle item stacks
-    public bool TryMoveItem(IInventoryTabItem itemToMove, byte toSlot, out IInventoryTabItem? inventoryTabItem)
+    public bool TryMoveItem(IInventoryTabItem itemToMove, short toSlot, out IInventoryTabItem? inventoryTabItem)
     {
         AssertLoaded();
 
-        var inventoryTab = TabItems[EInventoryTab.Equipment];
+        var inventoryTab = TabItems[itemToMove.InventoryTab];
         
         // if an item already exists in that spot the swap their places
         if (inventoryTab.TryGetValue(toSlot, out var existingItem))
@@ -144,7 +158,7 @@ public sealed class InventoryService : IInventoryService
         }
 
         // if there's no more space in the inventory
-        if (inventoryTab.Count >= TabCapacity[EInventoryTab.Equipment])
+        if (inventoryTab.Count >= TabCapacity[itemToMove.InventoryTab])
         {
             inventoryTabItem = default;
             return false;
@@ -156,6 +170,32 @@ public sealed class InventoryService : IInventoryService
         inventoryTab.Add(toSlot, itemToMove);
         inventoryTabItem = itemToMove;
 
+        return true;
+    }
+    
+    public byte GetInventoryTabCapacity(EInventoryTab inventoryTab)
+    {
+        return TabCapacity[inventoryTab];
+    }
+    
+    public SortedDictionary<short, IInventoryTabItem> GetInventoryTabItems(EInventoryTab inventoryTab)
+    {
+        return TabItems[inventoryTab];
+    }
+
+    public bool TryEquipItem(IInventoryTabItem item, out IInventoryTabItem? inventoryTabItem)
+    {
+        var targetSlot = item.MapleId switch
+        {
+            1040006 => EEquipSlot.Top,
+            1060006 => EEquipSlot.Bottom,
+            1072037 or 1072001 => EEquipSlot.Shoes,
+            1322005 => EEquipSlot.Weapon,
+            _ => throw new ArgumentException("Unsupported item id")
+        };
+
+        TryMoveItem(item, (short)targetSlot, out inventoryTabItem);
+        
         return true;
     }
 }

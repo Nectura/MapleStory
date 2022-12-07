@@ -2,6 +2,8 @@
 
 public interface IItem
 {
-    public Guid Id { get; init; }
-    public uint MapleId { get; init; }
+    Guid Id { get; set; }
+    uint MapleId { get; set; }
+    bool IsNxItem { get; set; }
+    string? NameTag { get; set; }
 }

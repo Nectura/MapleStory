@@ -4,6 +4,7 @@ using Common.Database.Repositories;
 using Common.Database.Repositories.Interfaces;
 using Common.Database.WorkUnits;
 using Common.Database.WorkUnits.Interfaces;
+using Common.Interfaces.Inventory;
 using Common.Middlewares;
 using Common.Networking.Configuration;
 using Common.Networking.Packets;
@@ -36,6 +37,7 @@ builder.Services.AddLogging(loggingBuilder =>
 
 var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
 
+builder.Services.AddSingleton<IAsyncPacketHandler, ExceptionLogPacketHandler>();
 builder.Services.AddSingleton<IAsyncPacketHandler, ClientValidationPacketHandler>();
 builder.Services.AddSingleton<IAsyncPacketHandler, ClientStartPacketHandler>();
 builder.Services.AddSingleton<IAsyncPacketHandler, ClientLoginPacketHandler>();
@@ -54,10 +56,12 @@ builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IInventoryTabItemRepository, InventoryTabItemRepository>();
 
 builder.Services.AddScoped<IAccountWorkUnit, AccountWorkUnit>();
+builder.Services.AddScoped<IInventoryWorkUnit, InventoryWorkUnit>();
 
 builder.Services.AddSingleton<ILoginServer, LoginServer.Services.LoginServer>();
 builder.Services.AddSingleton<IPacketProcessor, PacketProcessor>();
 builder.Services.AddSingleton<IAuthService, Sha3AuthService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
 
 builder.Services.AddHostedService<LoginServerBackgroundService>();
 
@@ -70,6 +74,7 @@ builder.Services.AddDbContext<IEntityContext, EntityContext>(options =>
 builder.Services.AddOptions();
 builder.Services.Configure<ServerConfig>(builder.Configuration.GetSection("Server"));
 builder.Services.Configure<LoginConfig>(builder.Configuration.GetSection("Login"));
+builder.Services.Configure<InventoryConfig>(builder.Configuration.GetSection("Inventory"));
 
 var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>();

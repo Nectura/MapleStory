@@ -5,6 +5,7 @@ using Common.Networking;
 using Common.Networking.Extensions;
 using Common.Networking.Packets.Enums;
 using Common.Networking.Packets.Interfaces;
+using Common.Services;
 using Common.Services.Interfaces;
 using LoginServer.Configuration;
 using LoginServer.Packets.Enums;
@@ -80,12 +81,13 @@ public sealed class ClientLoginPacketHandler : IAsyncPacketHandler
 
         await workUnit.CommitChangesAsync(cancellationToken);
 
+        client.Account = account;
+        
         SendLoginSuccessResult(client, account);
     }
 
     private void SendLoginSuccessResult(GameClient client, IAccount account)
     {
-        client.Account = account;
         client.Send(new GameMessageBuffer(EServerOperationCode.CheckPasswordResult)
             .WriteByte((byte)ELoginResult.Success)
             .WriteUInt(account.Id)

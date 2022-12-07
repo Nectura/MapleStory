@@ -5,11 +5,9 @@ namespace Common.Database.Models.Interfaces;
 
 public interface IInventoryTabItem : IEquippableItem, IConsumableItem, ISetupItem, IEtceteraItem
 {
-    EInventoryTab InventoryTab { get; init; }
-    byte Slot { get; set; }
-    
-    Guid InventoryId { get; init; }
-    Inventory? Inventory { get; set; }
-    
-    bool IsNxItem { get; init; }
+    EInventoryTab InventoryTab { get; set; }
+    short Slot { get; set; }
+    Guid InventoryId { get; set; }
+    void UpdateFromReference(IInventoryTabItem item);
+    EEquipSlotType GetEquipSlotType();
 }

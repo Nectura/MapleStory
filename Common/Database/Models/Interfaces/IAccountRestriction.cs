@@ -4,7 +4,6 @@ public interface IAccountRestriction
 {
     Guid Id { get; set; }
     uint AccountId { get; set; }
-    Account? Account { get; set; }
     uint? IssuedByAccountId { get; set; }
     string? Reason { get; set; }
     DateTime CreatedAt { get; set; }

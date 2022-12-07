@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Common.Database.Repositories.Abstract.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Common.Database.Repositories.Abstract;
 
@@ -65,6 +66,16 @@ public abstract class EntityRepository<T> : IEntityRepository<T> where T : class
     public void RemoveRange(IEnumerable<T> entities)
     {
         _context.Set<T>().RemoveRange(entities);
+    }
+
+    public EntityEntry<T> Update(T entity)
+    {
+        return _context.Set<T>().Update(entity);
+    }
+    
+    public void UpdateRange(IEnumerable<T> entities)
+    {
+        _context.Set<T>().UpdateRange(entities);
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

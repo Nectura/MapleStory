@@ -37,8 +37,6 @@ builder.Services.AddLogging(loggingBuilder =>
     loggingBuilder.AddSerilog(dispose: true);
 });
 
-var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
-
 builder.Services.AddSingleton<IAsyncPacketHandler, PlayerMigrationPacketHandler>();
 builder.Services.AddSingleton<IAsyncPacketHandler, UserChatPacketHandler>();
 
@@ -58,6 +56,7 @@ builder.Services.AddScoped<IInventoryService, InventoryService>();
 
 builder.Services.AddHostedService<ChannelServerBackgroundService>();
 
+var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
 builder.Services.AddDbContext<IEntityContext, EntityContext>(options =>
     options.UseMySql(dbConStr, ServerVersion.AutoDetect(dbConStr))
         .LogTo(Console.WriteLine, LogLevel.Warning)

@@ -35,8 +35,6 @@ builder.Services.AddLogging(loggingBuilder =>
     loggingBuilder.AddSerilog(dispose: true);
 });
 
-var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
-
 builder.Services.AddSingleton<IAsyncPacketHandler, ExceptionLogPacketHandler>();
 builder.Services.AddSingleton<IAsyncPacketHandler, ClientValidationPacketHandler>();
 builder.Services.AddSingleton<IAsyncPacketHandler, ClientStartPacketHandler>();
@@ -65,6 +63,7 @@ builder.Services.AddScoped<IInventoryService, InventoryService>();
 
 builder.Services.AddHostedService<LoginServerBackgroundService>();
 
+var dbConStr = builder.Configuration.GetConnectionString("MapleStory");
 builder.Services.AddDbContext<IEntityContext, EntityContext>(options =>
     options.UseMySql(dbConStr, ServerVersion.AutoDetect(dbConStr))
         .LogTo(Console.WriteLine, LogLevel.Warning)
